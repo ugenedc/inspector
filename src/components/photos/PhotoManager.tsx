@@ -148,7 +148,7 @@ export default function PhotoManager({
       )}
 
       {/* Content */}
-      {activeTab === 'upload' ? (
+      {photos.length === 0 || activeTab === 'upload' ? (
         <PhotoUpload
           inspectionId={inspectionId}
           roomId={roomId}
