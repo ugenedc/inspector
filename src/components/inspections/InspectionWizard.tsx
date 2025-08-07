@@ -373,7 +373,7 @@ export default function InspectionWizard({
             onChange={(e) => setComments(e.target.value)}
             rows={4}
             placeholder="Add observations, damage notes, or other comments..."
-            className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent resize-none"
+            className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent resize-none text-gray-900 placeholder-gray-400"
           />
         </section>
 
