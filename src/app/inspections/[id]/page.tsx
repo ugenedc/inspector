@@ -30,23 +30,24 @@ export default async function InspectionPage({ params }: InspectionPageProps) {
     return (
       <AppLayout>
         <div className="p-6 lg:p-8">
-        <div className="max-w-2xl mx-auto p-6">
-          <div className="bg-white shadow-lg rounded-lg p-8 text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">
-              Inspection Not Found
-            </h1>
-            <p className="text-gray-600 mb-6">
-              The inspection you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to view it.
-            </p>
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-            >
-              Back to Dashboard
-            </Link>
+          <div className="max-w-2xl mx-auto p-6">
+            <div className="bg-white shadow-lg rounded-lg p-8 text-center">
+              <h1 className="text-2xl font-bold text-gray-900 mb-4">
+                Inspection Not Found
+              </h1>
+              <p className="text-gray-600 mb-6">
+                The inspection you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to view it.
+              </p>
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+              >
+                Back to Dashboard
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      </AppLayout>
     )
   }
 
