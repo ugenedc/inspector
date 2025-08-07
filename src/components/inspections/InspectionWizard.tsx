@@ -228,11 +228,13 @@ export default function InspectionWizard({
   const currentRoom = rooms[currentRoomIndex]
   const completedRooms = rooms.filter(r => r.is_completed)
 
+  const [showNavigation, setShowNavigation] = useState(false)
+
   return (
     <div className="min-h-screen bg-white">
-      {/* Minimal Header */}
+      {/* Clean Focused Header */}
       <div className="border-b border-gray-100">
-        <div className="max-w-2xl mx-auto px-6 py-8">
+        <div className="max-w-4xl mx-auto px-6 py-8">
           {/* Step Indicator */}
           <div className="flex items-center space-x-2 text-sm text-gray-500 mb-6">
             <span>Step 3 of 3</span>
@@ -240,58 +242,91 @@ export default function InspectionWizard({
             <span>Room Inspection</span>
           </div>
           
-          {/* Progress */}
+          {/* Focused Room Header */}
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-2xl font-medium text-gray-900">{currentRoom.room_name}</h1>
-              <p className="text-gray-500 mt-1 capitalize">{inspectionType} inspection</p>
+              <h1 className="text-3xl font-semibold text-gray-900">{currentRoom.room_name}</h1>
+              <p className="text-gray-600 mt-2 capitalize">{inspectionType} inspection</p>
             </div>
+            
+            {/* Compact Progress with Navigation Trigger */}
             <div className="text-right">
-              <div className="text-sm text-gray-500 mb-1">
-                {currentRoomIndex + 1} of {rooms.length}
-              </div>
-              <div className="w-16 h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-gray-900 transition-all duration-500 ease-out"
-                  style={{ width: `${((currentRoomIndex + 1) / rooms.length) * 100}%` }}
-                />
-              </div>
+              <button
+                onClick={() => setShowNavigation(!showNavigation)}
+                className="group flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div className="text-right">
+                  <div className="text-sm font-medium text-gray-900">
+                    {currentRoomIndex + 1} of {rooms.length}
+                  </div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    {rooms.filter(r => r.is_completed).length} completed
+                  </div>
+                </div>
+                <div className="w-12 h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gray-900 transition-all duration-500 ease-out"
+                    style={{ width: `${((currentRoomIndex + 1) / rooms.length) * 100}%` }}
+                  />
+                </div>
+                <svg className={`w-4 h-4 text-gray-400 transition-transform ${showNavigation ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
             </div>
           </div>
 
-          {/* Room Navigation */}
-          <div className="space-y-3">
-            {rooms.map((room, index) => (
-              <button
-                key={room.id}
-                onClick={() => goToRoom(index)}
-                className={`w-full text-left p-4 rounded-lg transition-colors ${
-                  index === currentRoomIndex
-                    ? 'bg-gray-50'
-                    : 'hover:bg-gray-25'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-2 h-2 rounded-full ${
-                      index === currentRoomIndex ? 'bg-gray-900' :
-                      room.is_completed ? 'bg-green-500' : 'bg-gray-200'
-                    }`} />
-                    <span className={`font-medium ${
-                      index === currentRoomIndex ? 'text-gray-900' : 'text-gray-600'
-                    }`}>
-                      {room.room_name}
-                    </span>
-                  </div>
-                  {room.is_completed && (
-                    <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  )}
-                </div>
-              </button>
-            ))}
-          </div>
+          {/* Collapsible Room Navigation */}
+          {showNavigation && (
+            <div className="mb-8 p-6 bg-gray-50 rounded-lg">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-medium text-gray-900">All Rooms</h3>
+                <button
+                  onClick={() => setShowNavigation(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {rooms.map((room, index) => (
+                  <button
+                    key={room.id}
+                    onClick={() => {
+                      goToRoom(index)
+                      setShowNavigation(false)
+                    }}
+                    className={`text-left p-4 rounded-lg transition-colors ${
+                      index === currentRoomIndex
+                        ? 'bg-white border-2 border-gray-900 shadow-sm'
+                        : 'bg-white border border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-2 h-2 rounded-full ${
+                          index === currentRoomIndex ? 'bg-gray-900' :
+                          room.is_completed ? 'bg-green-500' : 'bg-gray-300'
+                        }`} />
+                        <span className={`font-medium ${
+                          index === currentRoomIndex ? 'text-gray-900' : 'text-gray-700'
+                        }`}>
+                          {room.room_name}
+                        </span>
+                      </div>
+                      {room.is_completed && (
+                        <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -403,23 +438,52 @@ export default function InspectionWizard({
         </section>
       </div>
 
-      {/* Bottom Navigation */}
+      {/* Enhanced Bottom Navigation */}
       <div className="border-t border-gray-100 bg-white">
-        <div className="max-w-2xl mx-auto px-6 py-6">
+        <div className="max-w-4xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
+            {/* Previous Button */}
             <button
               onClick={handlePrevious}
               disabled={currentRoomIndex === 0}
-              className="text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:hover:text-gray-600"
+              className="group flex items-center space-x-2 px-4 py-3 rounded-lg border border-gray-200 hover:border-gray-300 disabled:opacity-50 disabled:hover:border-gray-200 transition-colors"
             >
-              ← Previous
+              <svg className="w-4 h-4 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              <span className="text-gray-600 group-hover:text-gray-900">
+                {currentRoomIndex > 0 ? rooms[currentRoomIndex - 1]?.room_name : 'Previous'}
+              </span>
             </button>
+
+            {/* Room Counter */}
+            <div className="text-center">
+              <div className="text-sm font-medium text-gray-900">
+                {currentRoomIndex + 1} of {rooms.length}
+              </div>
+              <div className="text-xs text-gray-500 mt-1">
+                {rooms.filter(r => r.is_completed).length} completed
+              </div>
+            </div>
             
+            {/* Next/Complete Button */}
             <button
               onClick={handleNext}
-              className="bg-gray-900 text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+              className="group flex items-center space-x-2 px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
             >
-              {currentRoomIndex === rooms.length - 1 ? 'Complete' : 'Next →'}
+              <span>
+                {currentRoomIndex === rooms.length - 1 ? 'Complete Inspection' : 
+                 rooms[currentRoomIndex + 1] ? rooms[currentRoomIndex + 1].room_name : 'Next Room'}
+              </span>
+              {currentRoomIndex < rooms.length - 1 ? (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              )}
             </button>
           </div>
         </div>
