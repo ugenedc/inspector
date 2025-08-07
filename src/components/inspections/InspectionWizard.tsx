@@ -49,6 +49,7 @@ export default function InspectionWizard({
   const [showAnalysisReview, setShowAnalysisReview] = useState(false)
   const [rawAnalysisData, setRawAnalysisData] = useState<AIAnalysisData | null>(null)
   const [photoUrl, setPhotoUrl] = useState('')
+  const [showNavigation, setShowNavigation] = useState(false)
   
   const router = useRouter()
   const supabase = createClientSupabase()
@@ -227,8 +228,6 @@ export default function InspectionWizard({
 
   const currentRoom = rooms[currentRoomIndex]
   const completedRooms = rooms.filter(r => r.is_completed)
-
-  const [showNavigation, setShowNavigation] = useState(false)
 
   return (
     <div className="min-h-screen bg-white">
