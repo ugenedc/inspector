@@ -1,5 +1,6 @@
 import AppLayout from '@/components/layout/AppLayout'
 import { createServerSupabase } from '@/lib/supabase'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
 interface Inspection {
@@ -22,6 +23,10 @@ export default async function DashboardPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/login')
+  }
 
   // Fetch user's inspections with room counts
   const { data: inspections } = await supabase
