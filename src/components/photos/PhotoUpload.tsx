@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { createClientSupabase } from '@/lib/supabase'
 
 interface PhotoMetadata {
@@ -52,6 +52,15 @@ export default function PhotoUpload({
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const supabase = createClientSupabase()
+
+  // Cleanup camera stream on unmount
+  useEffect(() => {
+    return () => {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop())
+      }
+    }
+  }, [cameraStream])
 
   // Generate structured storage path
   const generateStoragePath = (filename: string) => {
@@ -253,22 +262,61 @@ export default function PhotoUpload({
   // Camera functions
   const startCamera = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { 
-          facingMode: 'environment', // Use back camera on mobile
-          width: { ideal: 1920 },
-          height: { ideal: 1080 }
-        }
-      })
+      console.log('Starting camera...')
+      
+      // Try different camera configurations for better compatibility
+      let stream: MediaStream | null = null
+      
+      try {
+        // First try with back camera (environment)
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { 
+            facingMode: 'environment',
+            width: { ideal: 1920, min: 640 },
+            height: { ideal: 1080, min: 480 }
+          }
+        })
+        console.log('Back camera initialized')
+      } catch (error) {
+        console.log('Back camera failed, trying front camera:', error)
+        // Fallback to front camera
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { 
+            facingMode: 'user',
+            width: { ideal: 1920, min: 640 },
+            height: { ideal: 1080, min: 480 }
+          }
+        })
+        console.log('Front camera initialized')
+      }
+      
+      if (!stream) {
+        throw new Error('No camera stream available')
+      }
+
       setCameraStream(stream)
       setShowCamera(true)
       
       if (videoRef.current) {
         videoRef.current.srcObject = stream
+        
+        // Wait for video to be ready and then play
+        const video = videoRef.current
+        video.onloadedmetadata = async () => {
+          try {
+            await video.play()
+            console.log('Video is playing')
+          } catch (playError) {
+            console.error('Error playing video:', playError)
+            onError?.('Camera preview failed to start')
+          }
+        }
       }
     } catch (error) {
-      onError?.('Camera access denied or not available')
       console.error('Camera error:', error)
+      onError?.('Camera access denied or not available')
+      setShowCamera(false)
+      setCameraStream(null)
     }
   }
 
@@ -387,12 +435,27 @@ export default function PhotoUpload({
               autoPlay
               playsInline
               muted
-              className="w-full h-auto"
+              className="w-full h-auto min-h-64"
+              onError={(e) => {
+                console.error('Video error:', e)
+                onError?.('Camera preview error')
+              }}
+              onLoadedData={() => {
+                console.log('Video loaded successfully')
+              }}
             />
+            {!cameraStream && (
+              <div className="absolute inset-0 flex items-center justify-center text-white">
+                <div className="text-center">
+                  <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                  <p className="text-sm">Initializing camera...</p>
+                </div>
+              </div>
+            )}
             <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
               <button
                 onClick={capturePhoto}
-                disabled={uploading}
+                disabled={uploading || !cameraStream}
                 className="w-16 h-16 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 disabled:opacity-50 shadow-lg"
               >
                 <div className="w-6 h-6 bg-gray-600 rounded-full"></div>
