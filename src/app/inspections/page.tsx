@@ -1,5 +1,6 @@
 import AppLayout from '@/components/layout/AppLayout'
 import { createServerSupabase } from '@/lib/supabase'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import InspectionActions from '@/components/inspections/InspectionActions'
 
@@ -23,6 +24,10 @@ export default async function InspectionsPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/login')
+  }
 
   // Fetch user's inspections with room counts
   const { data: inspections } = await supabase
