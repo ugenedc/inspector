@@ -1,10 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
+export const runtime = 'nodejs'
 import { createServerSupabase } from '@/lib/supabase'
 import { randomBytes } from 'crypto'
 
 // Generate a secure share token
 function generateShareToken(): string {
   return randomBytes(32).toString('hex')
+}
+
+function resolveBaseUrl(request: NextRequest): string {
+  const envUrl = process.env.NEXT_PUBLIC_SITE_URL
+  if (envUrl && envUrl.trim().length > 0) {
+    return envUrl.replace(/\/$/, '')
+  }
+  return request.nextUrl.origin
 }
 
 // POST - Generate or regenerate share link
@@ -53,8 +62,7 @@ export async function POST(
     }
 
     // Construct share URL
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-    const shareUrl = `${baseUrl}/shared/inspection/${shareToken}`
+    const shareUrl = `${resolveBaseUrl(request)}/shared/inspection/${shareToken}`
 
     return NextResponse.json({ 
       success: true, 
@@ -143,10 +151,9 @@ export async function GET(
       return NextResponse.json({ error: 'Inspection not found' }, { status: 404 })
     }
 
-    let shareUrl = null
+    let shareUrl: string | null = null
     if (inspection.share_enabled && inspection.share_token) {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-      shareUrl = `${baseUrl}/shared/inspection/${inspection.share_token}`
+      shareUrl = `${resolveBaseUrl(request)}/shared/inspection/${inspection.share_token}`
     }
 
     return NextResponse.json({
