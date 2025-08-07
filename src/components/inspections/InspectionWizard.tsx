@@ -233,6 +233,13 @@ export default function InspectionWizard({
       {/* Minimal Header */}
       <div className="border-b border-gray-100">
         <div className="max-w-2xl mx-auto px-6 py-8">
+          {/* Step Indicator */}
+          <div className="flex items-center space-x-2 text-sm text-gray-500 mb-6">
+            <span>Step 3 of 3</span>
+            <span>•</span>
+            <span>Room Inspection</span>
+          </div>
+          
           {/* Progress */}
           <div className="flex items-center justify-between mb-8">
             <div>

@@ -71,7 +71,7 @@ export default function InspectionForm() {
 
       setMessage({
         type: 'success',
-        text: 'Inspection created successfully!'
+        text: 'Inspection created! Now let\'s select the rooms to inspect...'
       })
 
       // Reset form
@@ -83,9 +83,9 @@ export default function InspectionForm() {
         inspection_date: new Date().toISOString().split('T')[0],
       })
 
-      // Redirect to inspection details or list after a short delay
+      // Redirect to room selection for step 2 of inspection setup
       setTimeout(() => {
-        router.push(`/inspections/${data[0].id}`)
+        router.push(`/inspections/${data[0].id}/rooms`)
       }, 1500)
 
     } catch (error) {
@@ -103,6 +103,11 @@ export default function InspectionForm() {
     <div className="min-h-screen bg-white">
       <div className="max-w-2xl mx-auto px-6 py-12">
         <div className="mb-8">
+          <div className="flex items-center space-x-2 text-sm text-gray-500 mb-4">
+            <span>Step 1 of 3</span>
+            <span>•</span>
+            <span>Inspection Details</span>
+          </div>
           <h1 className="text-2xl font-medium text-gray-900 mb-2">
             Start New Property Inspection
           </h1>

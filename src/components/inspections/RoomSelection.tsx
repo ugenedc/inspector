@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClientSupabase } from '@/lib/supabase'
 
 interface Room {
@@ -43,6 +44,7 @@ const STANDARD_ROOMS = [
 ]
 
 export default function RoomSelection({ inspectionId, onRoomsChange, readonly = false }: RoomSelectionProps) {
+  const router = useRouter()
   const [rooms, setRooms] = useState<Room[]>([])
   const [customRoomName, setCustomRoomName] = useState('')
   const [loading, setLoading] = useState(true)
@@ -217,6 +219,11 @@ export default function RoomSelection({ inspectionId, onRoomsChange, readonly = 
     <div className="min-h-screen bg-white">
       <div className="max-w-2xl mx-auto px-6 py-12">
         <div className="mb-8">
+          <div className="flex items-center space-x-2 text-sm text-gray-500 mb-4">
+            <span>Step 2 of 3</span>
+            <span>•</span>
+            <span>Room Selection</span>
+          </div>
           <h1 className="text-2xl font-medium text-gray-900 mb-2">
             Select Rooms to Inspect
           </h1>
@@ -354,6 +361,24 @@ export default function RoomSelection({ inspectionId, onRoomsChange, readonly = 
             </div>
           </div>
         )}
+
+        {/* Action Buttons */}
+        <div className="flex justify-end space-x-3 pt-6">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="px-6 py-3 text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            Back
+          </button>
+          <button
+            onClick={() => router.push(`/inspections/${inspectionId}/wizard`)}
+            disabled={selectedRooms.length === 0}
+            className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {selectedRooms.length === 0 ? 'Select Rooms to Continue' : `Start Inspection (${selectedRooms.length} rooms)`}
+          </button>
+        </div>
       </div>
     </div>
   )
