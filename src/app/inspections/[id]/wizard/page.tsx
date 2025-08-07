@@ -101,7 +101,6 @@ export default async function WizardPage({ params }: WizardPageProps) {
         <InspectionWizard 
           inspectionId={id}
           inspectionType={inspection.inspection_type}
-          redirectOnComplete={true}
         />
 
         {/* Quick Actions */}

@@ -76,7 +76,7 @@ export default function PhotoManager({
     } finally {
       setLoading(false)
     }
-  }, [inspectionId, roomId, supabase])
+  }, [roomId, supabase])
 
   useEffect(() => {
     loadPhotos()

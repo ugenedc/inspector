@@ -61,12 +61,12 @@ export default function PhotoUpload({
   }, [cameraStream])
 
   // Generate structured storage path
-  const generateStoragePath = (filename: string) => {
+  const generateStoragePath = useCallback((filename: string) => {
     return `inspections/${inspectionId}/rooms/${roomId}/${filename}`
-  }
+  }, [inspectionId, roomId])
 
   // Generate unique filename
-  const generateFilename = (originalFile: File | string) => {
+  const generateFilename = useCallback((originalFile: File | string) => {
     const timestamp = Date.now()
     const randomId = Math.random().toString(36).substring(2, 8)
     
@@ -81,7 +81,7 @@ export default function PhotoUpload({
         .toLowerCase()
       return `upload_${timestamp}_${randomId}_${sanitizedName}`
     }
-  }
+  }, [])
 
   // Get image dimensions
   const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
@@ -179,7 +179,7 @@ export default function PhotoUpload({
     } finally {
       setUploading(false)
     }
-  }, [inspectionId, roomId, onPhotoUploaded, onError])
+  }, [inspectionId, roomId, onPhotoUploaded, onError, generateStoragePath, generateFilename, supabase])
 
   // Handle file selection
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
