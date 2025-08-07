@@ -59,100 +59,119 @@ export default function AuthForm({ mode }: AuthFormProps) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            {mode === 'login' ? 'Sign in to your account' : 'Create your account'}
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+    <div className="min-h-screen bg-white">
+      <div className="max-w-md mx-auto px-6 py-24">
+        {/* Logo/Icon */}
+        <div className="flex justify-center mb-12">
+          <div className="w-16 h-16 bg-gray-900 rounded-2xl flex items-center justify-center">
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-3xl font-semibold text-gray-900 mb-3">
+            {mode === 'login' ? 'Welcome back' : 'Create your account'}
+          </h1>
+          <p className="text-gray-600">
             {mode === 'login' ? (
               <>
-                Or{' '}
+                Don&apos;t have an account?{' '}
                 <a
                   href="/signup"
-                  className="font-medium text-indigo-600 hover:text-indigo-500"
+                  className="text-gray-900 font-medium hover:underline"
                 >
-                  create a new account
+                  Sign up
                 </a>
               </>
             ) : (
               <>
-                Or{' '}
+                Already have an account?{' '}
                 <a
                   href="/login"
-                  className="font-medium text-indigo-600 hover:text-indigo-500"
+                  className="text-gray-900 font-medium hover:underline"
                 >
-                  sign in to your existing account
+                  Sign in
                 </a>
               </>
             )}
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="email-address" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="email-address" className="block text-sm font-medium text-gray-900 mb-3">
+              Email address
+            </label>
+            <input
+              id="email-address"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent text-gray-900 placeholder-gray-400"
+              placeholder="Enter your email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-3">
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+              required
+              className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent text-gray-900 placeholder-gray-400"
+              placeholder={mode === 'login' ? 'Enter your password' : 'Create a password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
 
           {message && (
             <div
-              className={`p-3 text-sm rounded-md ${
+              className={`p-4 text-sm rounded-lg ${
                 message.type === 'error'
-                  ? 'bg-red-50 text-red-700 border border-red-200'
-                  : 'bg-green-50 text-green-700 border border-green-200'
+                  ? 'bg-red-50 text-red-800 border border-red-100'
+                  : 'bg-green-50 text-green-800 border border-green-100'
               }`}
             >
               {message.text}
             </div>
           )}
 
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
-              ) : mode === 'login' ? (
-                'Sign in'
-              ) : (
-                'Sign up'
-              )}
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-4 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <div className="w-4 h-4 border-2 border-gray-300 border-t-white rounded-full animate-spin mr-2" />
+                {mode === 'login' ? 'Signing in...' : 'Creating account...'}
+              </div>
+            ) : mode === 'login' ? (
+              'Sign in'
+            ) : (
+              'Create account'
+            )}
+          </button>
         </form>
+
+        {/* Footer */}
+        <div className="text-center mt-12">
+          <p className="text-sm text-gray-500">
+            By continuing, you agree to our Terms of Service and Privacy Policy
+          </p>
+        </div>
       </div>
     </div>
   )
