@@ -22,7 +22,6 @@ interface PhotoMetadata {
 interface PhotoUploadProps {
   inspectionId: string
   roomId: string
-  roomName?: string
   onPhotoUploaded?: (photo: PhotoMetadata) => void
   onError?: (error: string) => void
   maxFiles?: number
@@ -34,7 +33,6 @@ interface PhotoUploadProps {
 export default function PhotoUpload({
   inspectionId,
   roomId,
-  roomName = 'Room',
   onPhotoUploaded,
   onError,
   maxFiles = 10,

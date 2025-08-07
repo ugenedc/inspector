@@ -235,7 +235,7 @@ export default function AddressAutocomplete({
                     setShowSuggestions(true)
                   }
                 }}
-                onBlur={(_e) => {
+                onBlur={() => {
                   // Don't hide suggestions if clicking on a suggestion
                   setTimeout(() => {
                     setShowSuggestions(false)

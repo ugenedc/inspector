@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClientSupabase } from '@/lib/supabase'
 import PhotoManager from '@/components/photos/PhotoManager'
@@ -21,7 +21,6 @@ interface Room {
 interface InspectionWizardProps {
   inspectionId: string
   inspectionType: 'entry' | 'exit' | 'routine'
-  redirectOnComplete?: boolean
 }
 
 interface Message {
@@ -36,8 +35,7 @@ interface AIAnalysisData {
 
 export default function InspectionWizard({
   inspectionId,
-  inspectionType,
-  redirectOnComplete = false
+  inspectionType
 }: InspectionWizardProps) {
   const [rooms, setRooms] = useState<Room[]>([])
   const [currentRoomIndex, setCurrentRoomIndex] = useState(0)
@@ -54,11 +52,7 @@ export default function InspectionWizard({
   const router = useRouter()
   const supabase = createClientSupabase()
 
-  useEffect(() => {
-    loadRooms()
-  }, [inspectionId])
-
-  const loadRooms = async () => {
+  const loadRooms = useCallback(async () => {
     try {
       setLoading(true)
       const { data, error } = await supabase
@@ -79,7 +73,11 @@ export default function InspectionWizard({
     } finally {
       setLoading(false)
     }
-  }
+  }, [inspectionId, supabase])
+
+  useEffect(() => {
+    loadRooms()
+  }, [loadRooms])
 
   const analyzePhoto = async (imageUrl: string) => {
     if (!imageUrl) return
@@ -157,7 +155,7 @@ export default function InspectionWizard({
       } else {
         handleInspectionComplete()
       }
-    } catch (error) {
+    } catch {
       setMessage({
         type: 'error',
         text: 'Failed to save progress. Please try again.'
@@ -247,7 +245,6 @@ export default function InspectionWizard({
   }
 
   const currentRoom = rooms[currentRoomIndex]
-  const completedRooms = rooms.filter(r => r.is_completed)
 
   return (
     <div className="min-h-screen bg-white">

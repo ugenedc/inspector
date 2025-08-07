@@ -151,7 +151,12 @@ export default function InspectionActions({ inspection, onInspectionDeleted }: I
 
   const nextAction = getNextAction()
 
-  const menuActions = [
+  const menuActions: Array<{
+    label: string
+    icon: React.ReactNode
+    onClick: () => void
+    variant?: 'default' | 'danger'
+  }> = [
     {
       label: 'View Details',
       icon: (
