@@ -180,8 +180,10 @@ export default function PhotoGallery({
   return (
     <div className={className}>
       {/* Photo Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {photos.map((photo) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {photos.map((photo) => {
+          console.log('Rendering photo:', photo.id, photo.public_url)
+          return (
           <div
             key={photo.id}
             className="relative group cursor-pointer rounded-lg overflow-hidden bg-gray-100"
@@ -197,14 +199,26 @@ export default function PhotoGallery({
             )}
 
             {/* Photo */}
-            <div className="aspect-[4/3] relative">
-              <Image
+            <div className="relative h-64 w-full">
+              <img
                 src={photo.public_url}
                 alt={photo.original_filename}
-                fill
-                className="object-cover transition-transform group-hover:scale-105"
-                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="w-full h-full object-cover rounded-lg transition-transform group-hover:scale-105"
+                onError={(e) => {
+                  console.error('Image load error:', photo.public_url)
+                  const target = e.target as HTMLImageElement
+                  target.style.display = 'none'
+                  target.nextElementSibling?.classList.remove('hidden')
+                }}
               />
+              <div className="hidden absolute inset-0 bg-gray-200 rounded-lg flex items-center justify-center">
+                <div className="text-center text-gray-500">
+                  <svg className="mx-auto h-8 w-8 mb-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                  </svg>
+                  <p className="text-xs">Image not available</p>
+                </div>
+              </div>
             </div>
 
             {/* Overlay with actions */}
@@ -247,7 +261,8 @@ export default function PhotoGallery({
               )}
             </div>
           </div>
-        ))}
+        )
+        })}
       </div>
 
       {/* Photo Details Modal */}
