@@ -1,0 +1,73 @@
+/* Print styles for inspection reports */
+@media print {
+  @page {
+    margin: 1in;
+    size: A4;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+
+  /* Hide navigation and non-essential elements */
+  nav,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Ensure content flows properly */
+  .max-w-4xl {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Page breaks */
+  .page-break {
+    page-break-before: always;
+  }
+
+  .avoid-break {
+    page-break-inside: avoid;
+  }
+
+  /* Adjust font sizes for print */
+  h1 {
+    font-size: 24px !important;
+  }
+
+  h2 {
+    font-size: 20px !important;
+  }
+
+  h3 {
+    font-size: 18px !important;
+  }
+
+  /* Ensure images scale properly */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Improve contrast for print */
+  .text-gray-600 {
+    color: #374151 !important;
+  }
+
+  .text-gray-700 {
+    color: #1f2937 !important;
+  }
+
+  /* Ensure backgrounds show in print */
+  .bg-gray-50,
+  .bg-gray-100 {
+    background-color: #f9fafb !important;
+  }
+
+  /* Border adjustments */
+  .border-gray-200 {
+    border-color: #e5e7eb !important;
+  }
+}

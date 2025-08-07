@@ -179,14 +179,8 @@ export default function InspectionWizard({
   }
 
   const handleInspectionComplete = () => {
-    if (redirectOnComplete) {
-      router.push(`/inspections/${inspectionId}`)
-    } else {
-      setMessage({
-        type: 'success',
-        text: 'Inspection completed successfully!'
-      })
-    }
+    // Always redirect to the beautiful report page
+    router.push(`/inspections/${inspectionId}/report`)
   }
 
   const goToRoom = (index: number) => {

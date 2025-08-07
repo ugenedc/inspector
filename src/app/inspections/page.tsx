@@ -127,7 +127,7 @@ export default async function InspectionsPage() {
     }
     return {
       text: 'View Report',
-      href: `/inspections/${inspection.id}`,
+      href: `/inspections/${inspection.id}/report`,
       color: 'bg-green-600 hover:bg-green-700'
     }
   }
