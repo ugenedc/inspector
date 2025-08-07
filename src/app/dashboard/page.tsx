@@ -24,7 +24,7 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser()
 
   // Fetch user's inspections with room counts
-  const { data: inspections, error } = await supabase
+  const { data: inspections } = await supabase
     .from('inspections')
     .select(`
       *,
@@ -38,7 +38,7 @@ export default async function DashboardPage() {
 
   const inspectionsWithCounts: Inspection[] = (inspections || []).map(inspection => {
     const rooms = inspection.rooms || []
-    const completedRooms = rooms.filter((room: any) => room.is_completed).length
+    const completedRooms = rooms.filter((room: { is_completed: boolean }) => room.is_completed).length
     const totalRooms = rooms.length
     
     // Determine status based on room completion

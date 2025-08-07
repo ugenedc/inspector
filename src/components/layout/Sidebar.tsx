@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { createClientSupabase } from '@/lib/supabase'
 
 interface SidebarProps {
-  user: any
+  user: { id: string; email?: string }
 }
 
 const navigation = [

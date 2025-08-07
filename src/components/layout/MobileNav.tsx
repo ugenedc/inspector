@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { createClientSupabase } from '@/lib/supabase'
 
 interface MobileNavProps {
-  user: any
+  user: { id: string; email?: string }
 }
 
 const navigation = [

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClientSupabase } from '@/lib/supabase'
 
 interface ShareButtonProps {
@@ -23,14 +23,10 @@ export default function ShareButton({ inspectionId }: ShareButtonProps) {
   })
   
   const [showModal, setShowModal] = useState(false)
-  const supabase = createClientSupabase()
+  // const supabase = createClientSupabase() // Unused for now
 
   // Load current share status
-  useEffect(() => {
-    loadShareStatus()
-  }, [inspectionId])
-
-  const loadShareStatus = async () => {
+  const loadShareStatus = useCallback(async () => {
     try {
       const response = await fetch(`/api/inspections/${inspectionId}/share`)
       if (response.ok) {
@@ -46,7 +42,11 @@ export default function ShareButton({ inspectionId }: ShareButtonProps) {
       console.error('Error loading share status:', error)
       setState(prev => ({ ...prev, loading: false }))
     }
-  }
+  }, [inspectionId])
+
+  useEffect(() => {
+    loadShareStatus()
+  }, [loadShareStatus])
 
   const generateShareLink = async () => {
     setState(prev => ({ ...prev, loading: true }))

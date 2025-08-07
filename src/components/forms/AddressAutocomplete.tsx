@@ -144,7 +144,7 @@ export default function AddressAutocomplete({
   }
 
   // Handle keyboard navigation
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (_e: React.KeyboardEvent) => {
     if (!showSuggestions || suggestions.length === 0) return
 
     switch (e.key) {

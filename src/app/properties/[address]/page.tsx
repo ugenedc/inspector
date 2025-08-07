@@ -145,7 +145,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               Property Not Found
             </h1>
             <p className="text-gray-600 mb-6">
-              The property you're looking for doesn't exist or you don't have permission to view it.
+              The property you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to view it.
             </p>
             <Link
               href="/properties"

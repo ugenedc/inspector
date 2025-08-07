@@ -13,7 +13,7 @@ export default function NotFound() {
         </h1>
         
         <p className="text-gray-600 mb-6">
-          The shared inspection report you're looking for doesn't exist, has been disabled, or the link may have expired.
+          The shared inspection report you&apos;re looking for doesn&apos;t exist, has been disabled, or the link may have expired.
         </p>
         
         <div className="text-sm text-gray-500">

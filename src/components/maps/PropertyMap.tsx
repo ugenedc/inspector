@@ -10,7 +10,7 @@ interface PropertyMapProps {
 
 export default function PropertyMap({ latitude, longitude, address }: PropertyMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
-  const mapInstanceRef = useRef<any>(null)
+  const mapInstanceRef = useRef<L.Map | null>(null)
 
   useEffect(() => {
     // Dynamically import Leaflet to avoid SSR issues
