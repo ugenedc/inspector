@@ -357,6 +357,13 @@ ${result.description}
             allowCamera={true}
             allowFiles={true}
             showMetadata={false}
+            onPhotoUploaded={(photo) => {
+              setPhotoUrl(photo.public_url)
+              // Auto-trigger AI analysis after photo upload
+              setTimeout(() => {
+                analyzePhoto(photo.public_url)
+              }, 1000)
+            }}
           />
         </div>
 

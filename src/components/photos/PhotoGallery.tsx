@@ -180,7 +180,7 @@ export default function PhotoGallery({
   return (
     <div className={className}>
       {/* Photo Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {photos.map((photo) => (
           <div
             key={photo.id}
@@ -197,13 +197,13 @@ export default function PhotoGallery({
             )}
 
             {/* Photo */}
-            <div className="aspect-square relative">
+            <div className="aspect-[4/3] relative">
               <Image
                 src={photo.public_url}
                 alt={photo.original_filename}
                 fill
                 className="object-cover transition-transform group-hover:scale-105"
-                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
             </div>
 

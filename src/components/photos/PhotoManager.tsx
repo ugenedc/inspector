@@ -29,6 +29,7 @@ interface PhotoManagerProps {
   allowCamera?: boolean
   allowFiles?: boolean
   showMetadata?: boolean
+  onPhotoUploaded?: (photo: PhotoMetadata) => void
   className?: string
 }
 
@@ -40,6 +41,7 @@ export default function PhotoManager({
   allowCamera = true,
   allowFiles = true,
   showMetadata = false,
+  onPhotoUploaded,
   className = ''
 }: PhotoManagerProps) {
   const [photos, setPhotos] = useState<PhotoMetadata[]>([])
@@ -85,6 +87,7 @@ export default function PhotoManager({
     setPhotos(prev => [newPhoto, ...prev])
     setActiveTab('gallery')
     setError(null)
+    onPhotoUploaded?.(newPhoto)
   }
 
   const handlePhotoDeleted = (photoId: string) => {
