@@ -21,6 +21,7 @@ export default function InspectionForm() {
     inspection_date: new Date().toISOString().split('T')[0], // Today's date
   })
   const [loading, setLoading] = useState(false)
+  const [redirecting, setRedirecting] = useState(false)
   const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null)
   
   const router = useRouter()
@@ -69,9 +70,12 @@ export default function InspectionForm() {
         throw error
       }
 
+      // Show success message and start redirect process
+      setLoading(false)
+      setRedirecting(true)
       setMessage({
         type: 'success',
-        text: 'Inspection created! Now let\'s select the rooms to inspect...'
+        text: 'Inspection created! Redirecting to room selection...'
       })
 
       // Reset form
@@ -94,13 +98,30 @@ export default function InspectionForm() {
         type: 'error',
         text: error instanceof Error ? error.message : 'Failed to create inspection. Please try again.'
       })
-    } finally {
       setLoading(false)
+      setRedirecting(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white relative">
+      {/* Elegant Loading Overlay */}
+      {redirecting && (
+        <div className="fixed inset-0 bg-white bg-opacity-95 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <div className="w-6 h-6 border-2 border-gray-300 border-t-white rounded-full animate-spin"></div>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Inspection Created Successfully
+            </h3>
+            <p className="text-gray-600">
+              Taking you to room selection...
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-2xl mx-auto px-6 py-12">
         <div className="mb-8">
           <div className="flex items-center space-x-2 text-sm text-gray-500 mb-4">
@@ -224,13 +245,18 @@ export default function InspectionForm() {
             </button>
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || redirecting}
               className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <div className="flex items-center">
                   <div className="w-4 h-4 border-2 border-gray-300 border-t-white rounded-full animate-spin mr-2" />
                   Creating...
+                </div>
+              ) : redirecting ? (
+                <div className="flex items-center">
+                  <div className="w-4 h-4 border-2 border-gray-300 border-t-white rounded-full animate-spin mr-2" />
+                  Redirecting...
                 </div>
               ) : (
                 'Create Inspection'
