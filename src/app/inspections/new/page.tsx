@@ -1,9 +1,12 @@
+import AppLayout from '@/components/layout/AppLayout'
 import InspectionForm from '@/components/inspections/InspectionForm'
 
 export default function NewInspectionPage() {
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <InspectionForm />
-    </div>
+    <AppLayout>
+      <div className="p-6 lg:p-8">
+        <InspectionForm />
+      </div>
+    </AppLayout>
   )
 }

@@ -1,6 +1,7 @@
 import { createServerSupabase } from '@/lib/supabase'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import AppLayout from '@/components/layout/AppLayout'
 import RoomSelection from '@/components/inspections/RoomSelection'
 
 interface RoomSelectionPageProps {
@@ -28,30 +29,33 @@ export default async function RoomSelectionPage({ params }: RoomSelectionPagePro
 
   if (error || !inspection) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-2xl mx-auto p-6">
-          <div className="bg-white shadow-lg rounded-lg p-8 text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">
-              Inspection Not Found
-            </h1>
-            <p className="text-gray-600 mb-6">
-              The inspection you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to view it.
-            </p>
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-            >
-              Back to Dashboard
-            </Link>
+      <AppLayout>
+        <div className="p-6 lg:p-8">
+          <div className="max-w-2xl mx-auto">
+            <div className="bg-white shadow-lg rounded-lg p-8 text-center">
+              <h1 className="text-2xl font-bold text-gray-900 mb-4">
+                Inspection Not Found
+              </h1>
+              <p className="text-gray-600 mb-6">
+                The inspection you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to view it.
+              </p>
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800"
+              >
+                Back to Dashboard
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      </AppLayout>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto p-6">
+    <AppLayout>
+      <div className="p-6 lg:p-8">
+        <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-6">
           <nav className="flex" aria-label="Breadcrumb">
@@ -131,6 +135,6 @@ export default async function RoomSelectionPage({ params }: RoomSelectionPagePro
           </Link>
         </div>
       </div>
-    </div>
+    </AppLayout>
   )
 }

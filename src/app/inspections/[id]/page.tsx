@@ -1,6 +1,7 @@
 import { createServerSupabase } from '@/lib/supabase'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import AppLayout from '@/components/layout/AppLayout'
 
 interface InspectionPageProps {
   params: Promise<{
@@ -27,7 +28,8 @@ export default async function InspectionPage({ params }: InspectionPageProps) {
 
   if (error || !inspection) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <AppLayout>
+        <div className="p-6 lg:p-8">
         <div className="max-w-2xl mx-auto p-6">
           <div className="bg-white shadow-lg rounded-lg p-8 text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">
@@ -49,7 +51,8 @@ export default async function InspectionPage({ params }: InspectionPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <AppLayout>
+      <div className="p-6 lg:p-8">
       <div className="max-w-4xl mx-auto p-6">
         <div className="bg-white shadow-lg rounded-lg p-8">
           <div className="flex justify-between items-start mb-6">
@@ -144,6 +147,6 @@ export default async function InspectionPage({ params }: InspectionPageProps) {
           </div>
         </div>
       </div>
-    </div>
+    </AppLayout>
   )
 }
