@@ -11,9 +11,17 @@ interface AddressSuggestion {
   class: string
 }
 
+interface SelectedLocation {
+  address: string
+  lat: number
+  lon: number
+  place_id: string
+}
+
 interface AddressAutocompleteProps {
   value: string
   onChange: (value: string) => void
+  onLocationSelect?: (location: SelectedLocation | null) => void
   placeholder?: string
   className?: string
   name?: string
@@ -23,6 +31,7 @@ interface AddressAutocompleteProps {
 export default function AddressAutocomplete({
   value,
   onChange,
+  onLocationSelect,
   placeholder = "Start typing an address...",
   className = "",
   name,
@@ -32,8 +41,9 @@ export default function AddressAutocomplete({
   const [loading, setLoading] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [highlightedIndex, setHighlightedIndex] = useState(-1)
+  const [isAddressSelected, setIsAddressSelected] = useState(false)
   const debounceTimeout = useRef<NodeJS.Timeout>()
-  const inputRef = useRef<HTMLTextAreaElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
   const suggestionRefs = useRef<(HTMLButtonElement | null)[]>([])
 
   // Debounced search function
@@ -80,9 +90,10 @@ export default function AddressAutocomplete({
   }
 
   // Handle input change with debouncing
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value
     onChange(newValue)
+    setIsAddressSelected(false) // User is typing, not selected anymore
 
     // Clear existing timeout
     if (debounceTimeout.current) {
@@ -97,10 +108,23 @@ export default function AddressAutocomplete({
 
   // Handle suggestion selection
   const handleSuggestionClick = (suggestion: AddressSuggestion) => {
+    const selectedLocation: SelectedLocation = {
+      address: suggestion.display_name,
+      lat: parseFloat(suggestion.lat),
+      lon: parseFloat(suggestion.lon),
+      place_id: suggestion.place_id
+    }
+    
     onChange(suggestion.display_name)
     setSuggestions([])
     setShowSuggestions(false)
     setHighlightedIndex(-1)
+    setIsAddressSelected(true) // Mark as selected
+    
+    // Notify parent component about the location selection
+    if (onLocationSelect) {
+      onLocationSelect(selectedLocation)
+    }
     
     // Show success feedback animation
     if (inputRef.current) {
@@ -179,11 +203,11 @@ export default function AddressAutocomplete({
   return (
     <div className="relative">
       <div className="relative">
-        <textarea
+        <input
           ref={inputRef}
+          type="text"
           name={name}
           required={required}
-          rows={3}
           value={value}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
@@ -192,20 +216,57 @@ export default function AddressAutocomplete({
               setShowSuggestions(true)
             }
           }}
-          className={`w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent resize-none text-gray-900 placeholder-gray-400 ${className}`}
+          className={`w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent text-gray-900 placeholder-gray-400 transition-all duration-200 ${
+            isAddressSelected 
+              ? 'bg-green-50 border-green-200 text-green-900' 
+              : ''
+          } ${className}`}
           placeholder={placeholder}
         />
         
+        {/* Selected indicator */}
+        {isAddressSelected && (
+          <div className="absolute right-12 top-1/2 transform -translate-y-1/2">
+            <div className="flex items-center text-green-600">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+            </div>
+          </div>
+        )}
+        
         {/* Loading indicator */}
         {loading && (
-          <div className="absolute right-3 top-4">
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
             <div className="w-4 h-4 border-2 border-gray-200 border-t-gray-500 rounded-full animate-spin"></div>
           </div>
+        )}
+        
+        {/* Clear button when address is selected */}
+        {isAddressSelected && !loading && (
+          <button
+            type="button"
+            onClick={() => {
+              onChange('')
+              setIsAddressSelected(false)
+              setSuggestions([])
+              setShowSuggestions(false)
+              if (onLocationSelect) {
+                onLocationSelect(null)
+              }
+              inputRef.current?.focus()
+            }}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         )}
       </div>
 
       {/* Suggestions dropdown */}
-      {showSuggestions && suggestions.length > 0 && (
+      {showSuggestions && suggestions.length > 0 && !isAddressSelected && (
         <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
           {suggestions.map((suggestion, index) => (
             <button

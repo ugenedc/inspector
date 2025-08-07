@@ -4,6 +4,14 @@ import { useState } from 'react'
 import { createClientSupabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import AddressAutocomplete from '@/components/forms/AddressAutocomplete'
+import PropertyMap from '@/components/maps/PropertyMap'
+
+interface SelectedLocation {
+  address: string
+  lat: number
+  lon: number
+  place_id: string
+}
 
 interface InspectionFormData {
   address: string
@@ -24,6 +32,7 @@ export default function InspectionForm() {
   const [loading, setLoading] = useState(false)
   const [redirecting, setRedirecting] = useState(false)
   const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null)
+  const [selectedLocation, setSelectedLocation] = useState<SelectedLocation | null>(null)
   
   const router = useRouter()
   const supabase = createClientSupabase()
@@ -49,9 +58,34 @@ export default function InspectionForm() {
         throw new Error('You must be logged in to create an inspection')
       }
 
+      // Find or create property if we have location data
+      let propertyId = null
+      
+      if (selectedLocation) {
+        try {
+          const { data: propertyData, error: propertyError } = await supabase
+            .rpc('find_or_create_property', {
+              p_address: formData.address.trim(),
+              p_formatted_address: selectedLocation.address,
+              p_latitude: selectedLocation.lat,
+              p_longitude: selectedLocation.lon,
+              p_place_id: selectedLocation.place_id
+            })
+
+          if (propertyError) {
+            console.error('Property creation error:', propertyError)
+          } else {
+            propertyId = propertyData
+          }
+        } catch (propertyErr) {
+          console.error('Property creation failed:', propertyErr)
+        }
+      }
+
       // Prepare data for insertion
       const inspectionData = {
         address: formData.address.trim(),
+        property_id: propertyId,
         inspection_type: formData.inspection_type,
         owner_name: formData.owner_name.trim(),
         tenant_name: formData.tenant_name?.trim() || null,
@@ -147,10 +181,22 @@ export default function InspectionForm() {
             <AddressAutocomplete
               value={formData.address}
               onChange={(value) => setFormData(prev => ({ ...prev, address: value }))}
+              onLocationSelect={setSelectedLocation}
               placeholder="Start typing an address (e.g., '123 Main St, New York')"
               name="address"
               required
             />
+            
+            {/* Show map when location is selected */}
+            {selectedLocation && (
+              <div className="mt-4">
+                <PropertyMap
+                  latitude={selectedLocation.lat}
+                  longitude={selectedLocation.lon}
+                  address={selectedLocation.address}
+                />
+              </div>
+            )}
           </div>
 
           {/* Inspection Type */}
