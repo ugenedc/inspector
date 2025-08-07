@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { createClientSupabase } from '@/lib/supabase'
+// import { createClientSupabase } from '@/lib/supabase' // Unused for now
 
 interface ShareButtonProps {
   inspectionId: string

@@ -12,36 +12,37 @@ interface InspectionReportPageProps {
   }>
 }
 
-interface Room {
-  id: string
-  room_name: string
-  room_type: 'standard' | 'custom'
-  is_completed: boolean
-  comments?: string
-  created_at: string
-}
+// Interfaces moved to avoid unused variable warnings
+// interface Room {
+//   id: string
+//   room_name: string
+//   room_type: 'standard' | 'custom'
+//   is_completed: boolean
+//   comments?: string
+//   created_at: string
+// }
 
-interface Photo {
-  id: string
-  filename: string
-  original_filename: string
-  public_url: string
-  capture_method: 'camera' | 'upload'
-  description?: string
-  created_at: string
-  room_id: string
-}
+// interface Photo {
+//   id: string
+//   filename: string
+//   original_filename: string
+//   public_url: string
+//   capture_method: 'camera' | 'upload'
+//   description?: string
+//   created_at: string
+//   room_id: string
+// }
 
-interface Inspection {
-  id: string
-  address: string
-  inspection_type: 'entry' | 'exit' | 'routine'
-  owner_name: string
-  tenant_name?: string
-  inspection_date: string
-  created_at: string
-  updated_at: string
-}
+// interface Inspection {
+//   id: string
+//   address: string
+//   inspection_type: 'entry' | 'exit' | 'routine'
+//   owner_name: string
+//   tenant_name?: string
+//   inspection_date: string
+//   created_at: string
+//   updated_at: string
+// }
 
 export default async function InspectionReportPage({ params }: InspectionReportPageProps) {
   const { id } = await params

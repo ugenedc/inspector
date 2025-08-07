@@ -8,36 +8,37 @@ interface SharedInspectionPageProps {
   }>
 }
 
-interface Room {
-  id: string
-  room_name: string
-  room_type: string
-  is_completed: boolean
-  comments: string | null
-  ai_analysis: string | null
-  photos: Photo[]
-}
+// Interfaces commented to avoid unused variable warnings
+// interface Room {
+//   id: string
+//   room_name: string
+//   room_type: string
+//   is_completed: boolean
+//   comments: string | null
+//   ai_analysis: string | null
+//   photos: Photo[]
+// }
 
-interface Photo {
-  id: string
-  public_url: string
-  description: string | null
-  capture_method: string
-  created_at: string
-}
+// interface Photo {
+//   id: string
+//   public_url: string
+//   description: string | null
+//   capture_method: string
+//   created_at: string
+// }
 
-interface Inspection {
-  id: string
-  address: string
-  inspection_type: 'entry' | 'exit' | 'routine'
-  owner_name: string
-  tenant_name: string | null
-  inspection_date: string
-  status: string
-  notes: string | null
-  created_at: string
-  updated_at: string
-}
+// interface Inspection {
+//   id: string
+//   address: string
+//   inspection_type: 'entry' | 'exit' | 'routine'
+//   owner_name: string
+//   tenant_name: string | null
+//   inspection_date: string
+//   status: string
+//   notes: string | null
+//   created_at: string
+//   updated_at: string
+// }
 
 export default async function SharedInspectionPage({ params }: SharedInspectionPageProps) {
   const { token } = await params
