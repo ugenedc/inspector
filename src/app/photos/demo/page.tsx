@@ -45,10 +45,9 @@ export default async function PhotoDemoPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div>
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Photo Manager</h2>
-            <PhotoManager
+                        <PhotoManager 
               inspectionId={demoInspectionId}
               roomId={demoRoomId}
-              roomName="Kitchen"
               maxFiles={10}
               allowCamera={true}
               allowFiles={true}
