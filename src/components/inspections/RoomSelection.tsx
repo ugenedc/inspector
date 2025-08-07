@@ -363,18 +363,21 @@ export default function RoomSelection({ inspectionId, onRoomsChange, readonly = 
         )}
 
         {/* Action Buttons */}
-        <div className="flex justify-end space-x-3 pt-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between gap-4 pt-6">
           <button
             type="button"
-            onClick={() => router.back()}
-            className="px-6 py-3 text-gray-600 hover:text-gray-900 transition-colors"
+            onClick={() => router.push(`/inspections/${inspectionId}`)}
+            className="inline-flex items-center justify-center px-6 py-3 text-gray-600 hover:text-gray-900 transition-colors order-2 sm:order-1"
           >
-            Back
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to Inspection
           </button>
           <button
             onClick={() => router.push(`/inspections/${inspectionId}/wizard`)}
             disabled={selectedRooms.length === 0}
-            className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed order-1 sm:order-2"
           >
             {selectedRooms.length === 0 ? 'Select Rooms to Continue' : `Start Inspection (${selectedRooms.length} rooms)`}
           </button>
