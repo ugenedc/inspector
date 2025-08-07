@@ -53,23 +53,23 @@ export default function QuickAnalysisReview({
   return (
     <div className={`bg-white rounded-lg border border-gray-200 ${className}`}>
       {/* Header */}
-      <div className="px-4 py-3 border-b bg-blue-50">
+      <div className="p-6 border-b border-gray-100">
         <div className="flex items-center justify-between">
-          <h4 className="font-medium text-gray-900">AI Analysis</h4>
-          <div className="flex items-center space-x-2">
-            <div className={`w-8 h-8 rounded-full ${getScoreColor(cleanlinessScore)} flex items-center justify-center text-white text-sm font-bold`}>
+          <h3 className="text-lg font-medium text-gray-900">Review Analysis</h3>
+          <div className="flex items-center space-x-3">
+            <div className={`w-10 h-10 rounded-lg ${getScoreColor(cleanlinessScore)} flex items-center justify-center text-white font-semibold`}>
               {cleanlinessScore}
             </div>
-            <span className="text-sm text-gray-600">{getScoreLabel(cleanlinessScore)}</span>
+            <span className="text-gray-600">{getScoreLabel(cleanlinessScore)}</span>
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-4 space-y-4">
+      <div className="p-6 space-y-8">
         {/* Score Slider */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block font-medium text-gray-900 mb-4">
             Cleanliness Score: {cleanlinessScore}/10
           </label>
           <input
@@ -80,7 +80,7 @@ export default function QuickAnalysisReview({
             onChange={(e) => setCleanlinessScore(parseInt(e.target.value))}
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
           />
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
+          <div className="flex justify-between text-sm text-gray-500 mt-2">
             <span>Poor</span>
             <span>Fair</span>
             <span>Good</span>
@@ -90,33 +90,33 @@ export default function QuickAnalysisReview({
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block font-medium text-gray-900 mb-4">
             Analysis Description
           </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            rows={5}
+            className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent resize-none text-gray-900 placeholder-gray-400"
             placeholder="Describe the room condition, any issues, and observations..."
           />
         </div>
 
         {/* Change Indicator */}
         {hasChanges && (
-          <div className="text-sm text-amber-600 bg-amber-50 px-3 py-2 rounded-md">
-            ✏️ Analysis has been modified from AI original
+          <div className="p-4 bg-amber-50 text-amber-800 rounded-lg">
+            Analysis has been modified from AI original
           </div>
         )}
       </div>
 
       {/* Actions */}
-      <div className="px-4 py-3 bg-gray-50 border-t flex justify-end space-x-3">
+      <div className="p-6 border-t border-gray-100 flex justify-end space-x-3">
         {onCancel && (
           <button
             onClick={onCancel}
             disabled={loading}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
+            className="px-6 py-3 text-gray-600 hover:text-gray-900 transition-colors disabled:opacity-50"
           >
             Cancel
           </button>
@@ -124,13 +124,13 @@ export default function QuickAnalysisReview({
         <button
           onClick={handleApprove}
           disabled={loading || !description.trim()}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50"
+          className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50"
         >
           {loading ? (
-            <>
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+            <div className="flex items-center">
+              <div className="w-4 h-4 border-2 border-gray-300 border-t-white rounded-full animate-spin mr-2"></div>
               Saving...
-            </>
+            </div>
           ) : (
             'Approve & Save'
           )}

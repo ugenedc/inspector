@@ -214,140 +214,148 @@ export default function RoomSelection({ inspectionId, onRoomsChange, readonly = 
   }
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">
-          Select Rooms to Inspect
-        </h2>
-        <span className="text-sm text-gray-500">
-          {selectedRooms.length} room{selectedRooms.length !== 1 ? 's' : ''} selected
-        </span>
-      </div>
+    <div className="min-h-screen bg-white">
+      <div className="max-w-2xl mx-auto px-6 py-12">
+        <div className="mb-8">
+          <h1 className="text-2xl font-medium text-gray-900 mb-2">
+            Select Rooms to Inspect
+          </h1>
+          <p className="text-gray-500">
+            Choose which rooms you'd like to include in this inspection.
+          </p>
+        </div>
 
-      {/* Message Display */}
-      {message && (
-        <div
-          className={`mb-4 p-3 rounded-md text-sm ${
+        {/* Message Display */}
+        {message && (
+          <div className={`mb-8 p-4 rounded-lg ${
             message.type === 'error'
-              ? 'bg-red-50 text-red-700 border border-red-200'
-              : 'bg-green-50 text-green-700 border border-green-200'
-          }`}
-        >
-          {message.text}
-        </div>
-      )}
+              ? 'bg-red-50 text-red-800'
+              : 'bg-green-50 text-green-800'
+          }`}>
+            {message.text}
+          </div>
+        )}
 
-      {/* Standard Rooms */}
-      <div className="mb-6">
-        <h3 className="text-lg font-medium text-gray-700 mb-3">Common Rooms</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          {STANDARD_ROOMS.map((roomName) => (
-            <label
-              key={roomName}
-              className={`flex items-center p-3 border rounded-lg cursor-pointer transition-colors ${
-                isRoomSelected(roomName)
-                  ? 'bg-indigo-50 border-indigo-300 text-indigo-900'
-                  : 'bg-gray-50 border-gray-300 text-gray-700 hover:bg-gray-100'
-              } ${readonly ? 'cursor-not-allowed opacity-60' : ''}`}
-            >
+        {/* Selected Count */}
+        <div className="mb-8 p-4 bg-gray-50 rounded-lg">
+          <div className="text-sm text-gray-600">
+            {selectedRooms.length} room{selectedRooms.length !== 1 ? 's' : ''} selected
+          </div>
+        </div>
+
+        {/* Standard Rooms */}
+        <div className="mb-12">
+          <h2 className="text-lg font-medium text-gray-900 mb-6">Common Rooms</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {STANDARD_ROOMS.map((roomName) => (
+              <label
+                key={roomName}
+                className={`flex items-center p-4 border rounded-lg cursor-pointer transition-colors ${
+                  isRoomSelected(roomName)
+                    ? 'bg-gray-50 border-gray-900'
+                    : 'border-gray-200 hover:border-gray-300'
+                } ${readonly ? 'cursor-not-allowed opacity-60' : ''}`}
+              >
+                <input
+                  type="checkbox"
+                  checked={isRoomSelected(roomName)}
+                  onChange={() => toggleRoom(roomName)}
+                  disabled={readonly || saving}
+                  className="h-4 w-4 text-gray-900 focus:ring-gray-500 border-gray-300 rounded mr-3"
+                />
+                <span className="font-medium text-gray-900">{roomName}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Custom Rooms */}
+        {!readonly && (
+          <div className="mb-12">
+            <h2 className="text-lg font-medium text-gray-900 mb-6">Add Custom Room</h2>
+            <div className="flex gap-3">
               <input
-                type="checkbox"
-                checked={isRoomSelected(roomName)}
-                onChange={() => toggleRoom(roomName)}
-                disabled={readonly || saving}
-                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded mr-3"
+                type="text"
+                value={customRoomName}
+                onChange={(e) => setCustomRoomName(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && addCustomRoom()}
+                placeholder="Enter custom room name"
+                className="flex-1 p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent text-gray-900 placeholder-gray-400"
+                disabled={saving}
               />
-              <span className="text-sm font-medium">{roomName}</span>
-            </label>
-          ))}
-        </div>
+              <button
+                onClick={addCustomRoom}
+                disabled={!customRoomName.trim() || saving}
+                className="px-6 py-4 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {saving ? 'Adding...' : 'Add Room'}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Custom Rooms List */}
+        {customRooms.length > 0 && (
+          <div className="mb-12">
+            <h2 className="text-lg font-medium text-gray-900 mb-6">Custom Rooms</h2>
+            <div className="space-y-3">
+              {customRooms.map((room) => (
+                <div
+                  key={room.id}
+                  className={`flex items-center justify-between p-4 border rounded-lg ${
+                    room.is_selected
+                      ? 'bg-gray-50 border-gray-900'
+                      : 'border-gray-200'
+                  }`}
+                >
+                  <label className="flex items-center cursor-pointer flex-1">
+                    <input
+                      type="checkbox"
+                      checked={room.is_selected}
+                      onChange={() => toggleRoom(room.room_name, 'custom')}
+                      disabled={readonly || saving}
+                      className="h-4 w-4 text-gray-900 focus:ring-gray-500 border-gray-300 rounded mr-3"
+                    />
+                    <span className="font-medium text-gray-900">{room.room_name}</span>
+                  </label>
+                  {!readonly && (
+                    <button
+                      onClick={() => removeRoom(room.id)}
+                      disabled={saving}
+                      className="ml-3 text-red-600 hover:text-red-800 font-medium"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Selected Rooms Summary */}
+        {selectedRooms.length > 0 && (
+          <div className="border-t border-gray-100 pt-8">
+            <h2 className="text-lg font-medium text-gray-900 mb-6">
+              Selected Rooms ({selectedRooms.length})
+            </h2>
+            <div className="flex flex-wrap gap-3">
+              {selectedRooms.map((room) => (
+                <span
+                  key={room.id}
+                  className="inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium bg-gray-100 text-gray-800"
+                >
+                  {room.room_name}
+                  {room.room_type === 'custom' && (
+                    <span className="ml-2 text-xs text-gray-600">(Custom)</span>
+                  )}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* Custom Rooms */}
-      {!readonly && (
-        <div className="mb-6">
-          <h3 className="text-lg font-medium text-gray-700 mb-3">Add Custom Room</h3>
-          <div className="flex gap-3">
-            <input
-              type="text"
-              value={customRoomName}
-              onChange={(e) => setCustomRoomName(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && addCustomRoom()}
-              placeholder="Enter custom room name"
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              disabled={saving}
-            />
-            <button
-              onClick={addCustomRoom}
-              disabled={!customRoomName.trim() || saving}
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {saving ? 'Adding...' : 'Add Room'}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Custom Rooms List */}
-      {customRooms.length > 0 && (
-        <div className="mb-6">
-          <h3 className="text-lg font-medium text-gray-700 mb-3">Custom Rooms</h3>
-          <div className="space-y-2">
-            {customRooms.map((room) => (
-              <div
-                key={room.id}
-                className={`flex items-center justify-between p-3 border rounded-lg ${
-                  room.is_selected
-                    ? 'bg-indigo-50 border-indigo-300'
-                    : 'bg-gray-50 border-gray-300'
-                }`}
-              >
-                <label className="flex items-center cursor-pointer flex-1">
-                  <input
-                    type="checkbox"
-                    checked={room.is_selected}
-                    onChange={() => toggleRoom(room.room_name, 'custom')}
-                    disabled={readonly || saving}
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded mr-3"
-                  />
-                  <span className="text-sm font-medium text-gray-900">{room.room_name}</span>
-                </label>
-                {!readonly && (
-                  <button
-                    onClick={() => removeRoom(room.id)}
-                    disabled={saving}
-                    className="ml-3 text-red-600 hover:text-red-800 text-sm font-medium"
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Selected Rooms Summary */}
-      {selectedRooms.length > 0 && (
-        <div className="border-t pt-4">
-          <h3 className="text-lg font-medium text-gray-700 mb-3">
-            Selected Rooms ({selectedRooms.length})
-          </h3>
-          <div className="flex flex-wrap gap-2">
-            {selectedRooms.map((room) => (
-              <span
-                key={room.id}
-                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800"
-              >
-                {room.room_name}
-                {room.room_type === 'custom' && (
-                  <span className="ml-1 text-xs text-indigo-600">(Custom)</span>
-                )}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
+    </div>
     </div>
   )
 }

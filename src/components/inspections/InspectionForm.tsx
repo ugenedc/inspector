@@ -100,16 +100,21 @@ export default function InspectionForm() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <div className="bg-white shadow-lg rounded-lg p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">
-          Start New Property Inspection
-        </h1>
+    <div className="min-h-screen bg-white">
+      <div className="max-w-2xl mx-auto px-6 py-12">
+        <div className="mb-8">
+          <h1 className="text-2xl font-medium text-gray-900 mb-2">
+            Start New Property Inspection
+          </h1>
+          <p className="text-gray-500">
+            Create a new inspection to document property condition and issues.
+          </p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-8">
           {/* Address */}
           <div>
-            <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="address" className="block text-sm font-medium text-gray-900 mb-3">
               Property Address *
             </label>
             <textarea
@@ -119,14 +124,14 @@ export default function InspectionForm() {
               rows={3}
               value={formData.address}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent resize-none text-gray-900 placeholder-gray-400"
               placeholder="Enter the complete property address"
             />
           </div>
 
           {/* Inspection Type */}
           <div>
-            <label htmlFor="inspection_type" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="inspection_type" className="block text-sm font-medium text-gray-900 mb-3">
               Inspection Type *
             </label>
             <select
@@ -135,7 +140,7 @@ export default function InspectionForm() {
               required
               value={formData.inspection_type}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent text-gray-900"
             >
               <option value="routine">Routine Inspection</option>
               <option value="entry">Entry Inspection</option>
@@ -145,7 +150,7 @@ export default function InspectionForm() {
 
           {/* Owner Name */}
           <div>
-            <label htmlFor="owner_name" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="owner_name" className="block text-sm font-medium text-gray-900 mb-3">
               Property Owner Name *
             </label>
             <input
@@ -155,14 +160,14 @@ export default function InspectionForm() {
               required
               value={formData.owner_name}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent text-gray-900 placeholder-gray-400"
               placeholder="Enter property owner's full name"
             />
           </div>
 
           {/* Tenant Name */}
           <div>
-            <label htmlFor="tenant_name" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="tenant_name" className="block text-sm font-medium text-gray-900 mb-3">
               Tenant Name <span className="text-gray-500">(Optional)</span>
             </label>
             <input
@@ -171,14 +176,14 @@ export default function InspectionForm() {
               name="tenant_name"
               value={formData.tenant_name}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent text-gray-900 placeholder-gray-400"
               placeholder="Enter tenant's full name (if applicable)"
             />
           </div>
 
           {/* Inspection Date */}
           <div>
-            <label htmlFor="inspection_date" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="inspection_date" className="block text-sm font-medium text-gray-900 mb-3">
               Inspection Date *
             </label>
             <input
@@ -188,40 +193,38 @@ export default function InspectionForm() {
               required
               value={formData.inspection_date}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent text-gray-900"
             />
           </div>
 
           {/* Message Display */}
           {message && (
-            <div
-              className={`p-4 rounded-md ${
-                message.type === 'error'
-                  ? 'bg-red-50 text-red-700 border border-red-200'
-                  : 'bg-green-50 text-green-700 border border-green-200'
-              }`}
-            >
+            <div className={`p-4 rounded-lg ${
+              message.type === 'error'
+                ? 'bg-red-50 text-red-800'
+                : 'bg-green-50 text-green-800'
+            }`}>
               {message.text}
             </div>
           )}
 
           {/* Submit Button */}
-          <div className="flex justify-end space-x-4">
+          <div className="flex justify-end space-x-3 pt-6">
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="px-6 py-3 text-gray-600 hover:text-gray-900 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <div className="flex items-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                  <div className="w-4 h-4 border-2 border-gray-300 border-t-white rounded-full animate-spin mr-2" />
                   Creating...
                 </div>
               ) : (
