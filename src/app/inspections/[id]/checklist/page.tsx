@@ -138,7 +138,6 @@ export default async function ChecklistPage({ params }: ChecklistPageProps) {
             <InspectionWizard 
               inspectionId={id}
               inspectionType={inspection.inspection_type}
-              redirectOnComplete={false}
             />
           </div>
         ) : null}

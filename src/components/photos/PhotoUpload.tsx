@@ -96,7 +96,7 @@ export default function PhotoUpload({
   }
 
   // Upload photo to Supabase Storage and save metadata
-  const uploadPhoto = async (file: File, captureMethod: 'camera' | 'upload') => {
+  const uploadPhoto = useCallback(async (file: File, captureMethod: 'camera' | 'upload') => {
     try {
       setUploading(true)
 
@@ -179,7 +179,7 @@ export default function PhotoUpload({
     } finally {
       setUploading(false)
     }
-  }
+  }, [inspectionId, roomId, onPhotoUploaded, onError])
 
   // Handle file selection
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClientSupabase } from '@/lib/supabase'
 import PhotoUpload from './PhotoUpload'
 import PhotoGallery from './PhotoGallery'
@@ -51,11 +51,7 @@ export default function PhotoManager({
   
   const supabase = createClientSupabase()
 
-  useEffect(() => {
-    loadPhotos()
-  }, [inspectionId, roomId])
-
-  const loadPhotos = async () => {
+  const loadPhotos = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
@@ -80,7 +76,11 @@ export default function PhotoManager({
     } finally {
       setLoading(false)
     }
-  }
+  }, [inspectionId, roomId, supabase])
+
+  useEffect(() => {
+    loadPhotos()
+  }, [loadPhotos])
 
   const handlePhotoUploaded = (newPhoto: PhotoMetadata) => {
     setPhotos(prev => [newPhoto, ...prev])

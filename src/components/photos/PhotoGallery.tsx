@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClientSupabase } from '@/lib/supabase'
 
 interface PhotoMetadata {
@@ -45,13 +45,7 @@ export default function PhotoGallery({
   
   const supabase = createClientSupabase()
 
-  useEffect(() => {
-    if (!externalPhotos && (inspectionId || roomId)) {
-      loadPhotos()
-    }
-  }, [inspectionId, roomId, externalPhotos])
-
-  const loadPhotos = async () => {
+  const loadPhotos = useCallback(async () => {
     try {
       setLoading(true)
       
@@ -74,7 +68,13 @@ export default function PhotoGallery({
     } finally {
       setLoading(false)
     }
-  }
+  }, [inspectionId, roomId, supabase])
+
+  useEffect(() => {
+    if (!externalPhotos && (inspectionId || roomId)) {
+      loadPhotos()
+    }
+  }, [inspectionId, roomId, externalPhotos, loadPhotos])
 
   const handlePhotoClick = (photo: PhotoMetadata) => {
     setSelectedPhoto(photo)
