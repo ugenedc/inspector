@@ -142,11 +142,11 @@ export default function InspectionForm() {
       let errorMessage = 'Failed to create inspection. Please try again.'
       
       if (error && typeof error === 'object') {
-        if ('message' in error && error.message) {
+        if ('message' in error && error.message && typeof error.message === 'string') {
           errorMessage = error.message
-        } else if ('error' in error && error.error) {
+        } else if ('error' in error && error.error && typeof error.error === 'string') {
           errorMessage = error.error
-        } else if ('details' in error && error.details) {
+        } else if ('details' in error && error.details && typeof error.details === 'string') {
           errorMessage = error.details
         } else {
           errorMessage = `Database error: ${JSON.stringify(error)}`
