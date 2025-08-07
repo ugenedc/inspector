@@ -144,7 +144,7 @@ export default function AddressAutocomplete({
   }
 
   // Handle keyboard navigation
-  const handleKeyDown = (_e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!showSuggestions || suggestions.length === 0) return
 
     switch (e.key) {
@@ -161,7 +161,23 @@ export default function AddressAutocomplete({
       case 'Enter':
         e.preventDefault()
         if (highlightedIndex >= 0 && highlightedIndex < suggestions.length) {
-          handleSuggestionClick(suggestions[highlightedIndex])
+          const suggestion = suggestions[highlightedIndex]
+          const selectedLocation: SelectedLocation = {
+            address: suggestion.display_name,
+            lat: parseFloat(suggestion.lat),
+            lon: parseFloat(suggestion.lon),
+            place_id: suggestion.place_id
+          }
+          
+          onChange(suggestion.display_name)
+          setSuggestions([])
+          setShowSuggestions(false)
+          setHighlightedIndex(-1)
+          setIsAddressSelected(true)
+          
+          if (onLocationSelect) {
+            onLocationSelect(selectedLocation)
+          }
         }
         break
       case 'Escape':
