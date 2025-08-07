@@ -149,16 +149,15 @@ export default function PhotoManager({
 
       {/* Content */}
       {photos.length === 0 || activeTab === 'upload' ? (
-        <PhotoUpload
-          inspectionId={inspectionId}
-          roomId={roomId}
-          roomName={roomName}
-          onPhotoUploaded={handlePhotoUploaded}
-          onError={handleError}
-          maxFiles={maxFiles}
-          allowCamera={allowCamera}
-          allowFiles={allowFiles}
-        />
+                  <PhotoUpload 
+            inspectionId={inspectionId}
+            roomId={roomId}
+            onPhotoUploaded={handlePhotoUploaded}
+            onError={handleError}
+            maxFiles={maxFiles}
+            allowCamera={allowCamera}
+            allowFiles={allowFiles}
+          />
       ) : (
         <PhotoGallery
           photos={photos}
