@@ -101,6 +101,19 @@ export default function AddressAutocomplete({
     setSuggestions([])
     setShowSuggestions(false)
     setHighlightedIndex(-1)
+    
+    // Show success feedback animation
+    if (inputRef.current) {
+      inputRef.current.style.borderColor = '#10b981'
+      inputRef.current.style.backgroundColor = '#f0fdf4'
+      
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.style.borderColor = ''
+          inputRef.current.style.backgroundColor = ''
+        }
+      }, 1000)
+    }
   }
 
   // Handle keyboard navigation

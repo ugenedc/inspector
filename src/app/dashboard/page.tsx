@@ -216,6 +216,21 @@ export default async function DashboardPage() {
                   <p className="text-sm text-gray-500">Manage your inspection portfolio</p>
                 </div>
               </Link>
+              
+              <Link
+                href="/properties"
+                className="flex items-center p-4 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors"
+              >
+                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+                  <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-medium text-gray-900">Properties</p>
+                  <p className="text-sm text-gray-500">Browse by address & history</p>
+                </div>
+              </Link>
             </div>
           </div>
 
