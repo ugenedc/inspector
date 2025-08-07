@@ -42,7 +42,7 @@ export default function AddressAutocomplete({
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [highlightedIndex, setHighlightedIndex] = useState(-1)
   const [isAddressSelected, setIsAddressSelected] = useState(false)
-  const debounceTimeout = useRef<NodeJS.Timeout>()
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const suggestionRefs = useRef<(HTMLButtonElement | null)[]>([])
 
