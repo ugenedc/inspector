@@ -124,13 +124,6 @@ export default function RoomSelection({ inspectionId, onRoomsChange, readonly = 
         onRoomsChange?.(updatedRooms)
       }
 
-      setMessage({
-        type: 'success',
-        text: 'Room updated successfully!'
-      })
-      
-      // Clear success message after 2 seconds
-      setTimeout(() => setMessage(null), 2000)
     } catch (error) {
       console.error('Error updating room:', error)
       setMessage({
