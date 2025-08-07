@@ -12,37 +12,17 @@ interface InspectionReportPageProps {
   }>
 }
 
-// Interfaces moved to avoid unused variable warnings
-// interface Room {
-//   id: string
-//   room_name: string
-//   room_type: 'standard' | 'custom'
-//   is_completed: boolean
-//   comments?: string
-//   created_at: string
-// }
-
-// interface Photo {
-//   id: string
-//   filename: string
-//   original_filename: string
-//   public_url: string
-//   capture_method: 'camera' | 'upload'
-//   description?: string
-//   created_at: string
-//   room_id: string
-// }
-
-// interface Inspection {
-//   id: string
-//   address: string
-//   inspection_type: 'entry' | 'exit' | 'routine'
-//   owner_name: string
-//   tenant_name?: string
-//   inspection_date: string
-//   created_at: string
-//   updated_at: string
-// }
+// Interface for photo type to avoid 'any' type
+interface Photo {
+  id: string
+  filename: string
+  original_filename: string
+  public_url: string
+  capture_method: 'camera' | 'upload'
+  description?: string
+  created_at: string
+  room_id: string
+}
 
 export default async function InspectionReportPage({ params }: InspectionReportPageProps) {
   const { id } = await params
@@ -242,7 +222,7 @@ export default async function InspectionReportPage({ params }: InspectionReportP
                         <div className="mb-6">
                           <h4 className="text-sm font-medium text-gray-700 mb-4">Photos ({room.photos.length})</h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {room.photos.map((photo: any) => (
+                            {room.photos.map((photo: Photo) => (
                               <div key={photo.id} className="space-y-3">
                                 <div className="relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
                                   <Image
