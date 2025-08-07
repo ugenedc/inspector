@@ -129,7 +129,6 @@ export default function InspectionWizard({
 
       if (error) throw error
       
-      // Update local state
       setRooms(prev => prev.map(room => 
         room.id === currentRoom.id 
           ? { ...room, comments, ai_analysis: analysis, photo_url: photoUrl, is_completed: !!(photoUrl && analysis) }
@@ -148,7 +147,6 @@ export default function InspectionWizard({
       if (currentRoomIndex < rooms.length - 1) {
         const nextIndex = currentRoomIndex + 1
         setCurrentRoomIndex(nextIndex)
-        // Load data for next room
         const nextRoom = rooms[nextIndex]
         setComments(nextRoom.comments || '')
         setAnalysis(nextRoom.ai_analysis || '')
@@ -156,7 +154,6 @@ export default function InspectionWizard({
         setShowAnalysisReview(false)
         setRawAnalysisData(null)
       } else {
-        // All rooms completed
         handleInspectionComplete()
       }
     } catch (error) {
@@ -171,7 +168,6 @@ export default function InspectionWizard({
     if (currentRoomIndex > 0) {
       const prevIndex = currentRoomIndex - 1
       setCurrentRoomIndex(prevIndex)
-      // Load data for previous room
       const prevRoom = rooms[prevIndex]
       setComments(prevRoom.comments || '')
       setAnalysis(prevRoom.ai_analysis || '')
@@ -204,10 +200,10 @@ export default function InspectionWizard({
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-200 border-t-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600 font-medium">Loading inspection...</p>
+          <div className="w-6 h-6 border-2 border-gray-200 border-t-gray-800 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading inspection...</p>
         </div>
       </div>
     )
@@ -215,15 +211,15 @@ export default function InspectionWizard({
 
   if (rooms.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
-        <div className="text-center bg-white rounded-3xl p-8 shadow-xl max-w-md w-full">
-          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+      <div className="min-h-screen bg-white flex items-center justify-center p-6">
+        <div className="text-center max-w-md">
+          <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-6">
+            <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
           </div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">No Rooms Selected</h3>
-          <p className="text-gray-600">Please select rooms before starting the inspection.</p>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No rooms selected</h3>
+          <p className="text-gray-500">Please select rooms before starting the inspection.</p>
         </div>
       </div>
     )
@@ -231,295 +227,196 @@ export default function InspectionWizard({
 
   const currentRoom = rooms[currentRoomIndex]
   const completedRooms = rooms.filter(r => r.is_completed)
-  const progress = ((currentRoomIndex + 1) / rooms.length) * 100
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Beautiful Mobile Header */}
-      <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-gray-100 shadow-sm">
-        <div className="px-4 py-6">
-          {/* Progress Ring & Title */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-4">
-              <div className="relative w-16 h-16">
-                <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
-                  <path
-                    d="m18,2.0845 a 15.9155,15.9155 0 0,1 0,31.831 a 15.9155,15.9155 0 0,1 0,-31.831"
-                    fill="none"
-                    stroke="#e5e7eb"
-                    strokeWidth="3"
-                  />
-                  <path
-                    d="m18,2.0845 a 15.9155,15.9155 0 0,1 0,31.831 a 15.9155,15.9155 0 0,1 0,-31.831"
-                    fill="none"
-                    stroke="url(#gradient)"
-                    strokeWidth="3"
-                    strokeDasharray={`${(completedRooms.length / rooms.length) * 100}, 100`}
-                    className="transition-all duration-700 ease-out"
-                    strokeLinecap="round"
-                  />
-                  <defs>
-                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#3b82f6" />
-                      <stop offset="100%" stopColor="#1d4ed8" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-sm font-bold text-blue-600">
-                    {completedRooms.length}/{rooms.length}
-                  </span>
-                </div>
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">{currentRoom.room_name}</h1>
-                <p className="text-sm text-gray-500 capitalize flex items-center">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
-                  {inspectionType} Inspection
-                </p>
-              </div>
+    <div className="min-h-screen bg-white">
+      {/* Minimal Header */}
+      <div className="border-b border-gray-100">
+        <div className="max-w-2xl mx-auto px-6 py-8">
+          {/* Progress */}
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-2xl font-medium text-gray-900">{currentRoom.room_name}</h1>
+              <p className="text-gray-500 mt-1 capitalize">{inspectionType} inspection</p>
             </div>
             <div className="text-right">
-              <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                {Math.round((completedRooms.length / rooms.length) * 100)}%
+              <div className="text-sm text-gray-500 mb-1">
+                {currentRoomIndex + 1} of {rooms.length}
               </div>
-              <div className="text-xs text-gray-500 font-medium">Complete</div>
+              <div className="w-16 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-gray-900 transition-all duration-500 ease-out"
+                  style={{ width: `${((currentRoomIndex + 1) / rooms.length) * 100}%` }}
+                />
+              </div>
             </div>
           </div>
 
-          {/* Room Navigation - Horizontal Scroll */}
-          <div className="overflow-x-auto pb-2 -mx-1">
-            <div className="flex space-x-3 px-1">
-              {rooms.map((room, index) => (
-                <button
-                  key={room.id}
-                  onClick={() => goToRoom(index)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 transform ${
-                    index === currentRoomIndex
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105 shadow-blue-200'
-                      : room.is_completed
-                      ? 'bg-green-100 text-green-700 border-2 border-green-200 hover:scale-105'
-                      : 'bg-white text-gray-600 border-2 border-gray-200 hover:border-gray-300 hover:scale-105'
-                  }`}
-                >
-                  {room.is_completed && '✨ '}{room.room_name}
-                </button>
-              ))}
-            </div>
+          {/* Room Navigation */}
+          <div className="space-y-3">
+            {rooms.map((room, index) => (
+              <button
+                key={room.id}
+                onClick={() => goToRoom(index)}
+                className={`w-full text-left p-4 rounded-lg transition-colors ${
+                  index === currentRoomIndex
+                    ? 'bg-gray-50'
+                    : 'hover:bg-gray-25'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-2 h-2 rounded-full ${
+                      index === currentRoomIndex ? 'bg-gray-900' :
+                      room.is_completed ? 'bg-green-500' : 'bg-gray-200'
+                    }`} />
+                    <span className={`font-medium ${
+                      index === currentRoomIndex ? 'text-gray-900' : 'text-gray-600'
+                    }`}>
+                      {room.room_name}
+                    </span>
+                  </div>
+                  {room.is_completed && (
+                    <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </div>
+              </button>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Message Display */}
+      {/* Message */}
       {message && (
-        <div className="px-4 pt-4">
-          <div className={`p-4 rounded-2xl shadow-sm border-l-4 ${
+        <div className="max-w-2xl mx-auto px-6 pt-6">
+          <div className={`p-4 rounded-lg ${
             message.type === 'error' 
-              ? 'bg-red-50 text-red-700 border-red-400' 
-              : 'bg-green-50 text-green-700 border-green-400'
+              ? 'bg-red-50 text-red-800' 
+              : 'bg-green-50 text-green-800'
           }`}>
-            <div className="flex items-center">
-              {message.type === 'error' ? (
-                <div className="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center mr-3">
-                  <svg className="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                  </svg>
-                </div>
-              ) : (
-                <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                  <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                </div>
-              )}
-              <span className="font-medium">{message.text}</span>
-            </div>
+            {message.text}
           </div>
         </div>
       )}
 
-      {/* Main Content - Mobile First */}
-      <div className="px-4 py-6 space-y-6">
-        {/* Photo Section */}
-        <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
-          <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-purple-50">
-            <h2 className="text-lg font-semibold text-gray-900 flex items-center">
-              <div className="w-8 h-8 bg-blue-100 rounded-xl flex items-center justify-center mr-3">
-                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </div>
-              Room Photos
-            </h2>
+      {/* Main Content */}
+      <div className="max-w-2xl mx-auto px-6 py-8 space-y-12">
+        {/* Photos */}
+        <section>
+          <h2 className="text-lg font-medium text-gray-900 mb-6">Photos</h2>
+          <PhotoManager
+            inspectionId={inspectionId}
+            roomId={currentRoom.id}
+            roomName={currentRoom.room_name}
+            maxFiles={5}
+            allowCamera={true}
+            allowFiles={true}
+            showMetadata={false}
+            onPhotoUploaded={(photo) => {
+              setPhotoUrl(photo.public_url)
+              setTimeout(() => {
+                analyzePhoto(photo.public_url)
+              }, 1000)
+            }}
+          />
+        </section>
+
+        {/* Comments */}
+        <section>
+          <h2 className="text-lg font-medium text-gray-900 mb-6">Notes</h2>
+          <textarea
+            value={comments}
+            onChange={(e) => setComments(e.target.value)}
+            rows={4}
+            placeholder="Add observations, damage notes, or other comments..."
+            className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent resize-none"
+          />
+        </section>
+
+        {/* AI Analysis */}
+        <section>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-medium text-gray-900">Analysis</h2>
+            {photoUrl && !showAnalysisReview && !analyzing && (
+              <button
+                onClick={() => analyzePhoto(photoUrl)}
+                className="text-sm text-gray-600 hover:text-gray-900 underline"
+              >
+                Analyze photo
+              </button>
+            )}
           </div>
-          <div className="p-6">
-            <PhotoManager
-              inspectionId={inspectionId}
-              roomId={currentRoom.id}
-              roomName={currentRoom.room_name}
-              maxFiles={5}
-              allowCamera={true}
-              allowFiles={true}
-              showMetadata={false}
-              onPhotoUploaded={(photo) => {
-                setPhotoUrl(photo.public_url)
-                setTimeout(() => {
-                  analyzePhoto(photo.public_url)
-                }, 1000)
+          
+          {analyzing ? (
+            <div className="flex items-center p-8 text-gray-500">
+              <div className="w-4 h-4 border-2 border-gray-200 border-t-gray-500 rounded-full animate-spin mr-3"></div>
+              Analyzing photo...
+            </div>
+          ) : showAnalysisReview && rawAnalysisData ? (
+            <QuickAnalysisReview
+              initialData={{
+                description: rawAnalysisData.description,
+                cleanliness_score: rawAnalysisData.cleanliness_score
+              }}
+              onApprove={(approvedData) => {
+                const finalAnalysis = `${approvedData.description}\n\nCleanliness: ${approvedData.cleanliness_score}/10`
+                setAnalysis(finalAnalysis)
+                setShowAnalysisReview(false)
+                setMessage({
+                  type: 'success',
+                  text: 'Analysis saved'
+                })
+                setTimeout(() => setMessage(null), 3000)
+              }}
+              onCancel={() => {
+                setShowAnalysisReview(false)
+                setRawAnalysisData(null)
               }}
             />
-          </div>
-        </div>
-
-        {/* Comments Section */}
-        <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
-          <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-amber-50 to-orange-50">
-            <h2 className="text-lg font-semibold text-gray-900 flex items-center">
-              <div className="w-8 h-8 bg-amber-100 rounded-xl flex items-center justify-center mr-3">
-                <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
+          ) : analysis ? (
+            <div className="space-y-4">
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <div className="whitespace-pre-wrap text-gray-700">{analysis}</div>
               </div>
-              Comments & Notes
-            </h2>
-          </div>
-          <div className="p-6">
-            <textarea
-              value={comments}
-              onChange={(e) => setComments(e.target.value)}
-              rows={4}
-              placeholder="Add observations, damage notes, or any other comments about this room..."
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-700 placeholder-gray-400"
-            />
-          </div>
-        </div>
-
-        {/* AI Analysis Section */}
-        <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
-          <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-purple-50 to-pink-50">
-            <div className="flex justify-between items-center">
-              <h2 className="text-lg font-semibold text-gray-900 flex items-center">
-                <div className="w-8 h-8 bg-purple-100 rounded-xl flex items-center justify-center mr-3">
-                  <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                  </svg>
-                </div>
-                AI Analysis
-              </h2>
-              {photoUrl && !showAnalysisReview && !analyzing && (
-                <button
-                  onClick={() => analyzePhoto(photoUrl)}
-                  className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
-                >
-                  ✨ Analyze
-                </button>
-              )}
+              <button
+                onClick={() => analyzePhoto(photoUrl)}
+                disabled={!photoUrl}
+                className="text-sm text-gray-600 hover:text-gray-900 underline disabled:opacity-50"
+              >
+                Re-analyze
+              </button>
             </div>
-          </div>
-          <div className="p-6">
-            {analyzing ? (
-              <div className="flex items-center justify-center py-8">
-                <div className="flex items-center space-x-3">
-                  <div className="animate-spin rounded-full h-6 w-6 border-2 border-purple-200 border-t-purple-600"></div>
-                  <span className="text-purple-600 font-medium">AI is analyzing the photo...</span>
-                </div>
-              </div>
-            ) : showAnalysisReview && rawAnalysisData ? (
-              <QuickAnalysisReview
-                initialData={{
-                  description: rawAnalysisData.description,
-                  cleanliness_score: rawAnalysisData.cleanliness_score
-                }}
-                onApprove={(approvedData) => {
-                  const finalAnalysis = `**Condition Analysis:**\n${approvedData.description}\n\n**Cleanliness Score:** ${approvedData.cleanliness_score}/10`
-                  setAnalysis(finalAnalysis)
-                  setShowAnalysisReview(false)
-                  setMessage({
-                    type: 'success',
-                    text: '✨ Analysis approved and saved!'
-                  })
-                  setTimeout(() => setMessage(null), 3000)
-                }}
-                onCancel={() => {
-                  setShowAnalysisReview(false)
-                  setRawAnalysisData(null)
-                }}
-              />
-            ) : analysis ? (
-              <div className="space-y-4">
-                <div className="bg-gray-50 rounded-2xl p-4">
-                  <div className="prose prose-sm max-w-none text-gray-700 whitespace-pre-wrap">{analysis}</div>
-                </div>
-                <button
-                  onClick={() => analyzePhoto(photoUrl)}
-                  disabled={!photoUrl}
-                  className="px-4 py-2 bg-gray-100 text-gray-600 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors disabled:opacity-50"
-                >
-                  🔄 Re-analyze Photo
-                </button>
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <p className="text-gray-500 font-medium">
-                  {photoUrl ? 'Tap "Analyze" to get AI insights' : '📸 Upload a photo to get AI analysis'}
-                </p>
-              </div>
-            )}
+          ) : (
+            <div className="p-8 text-center text-gray-500">
+              {photoUrl ? 'Click "Analyze photo" to get insights' : 'Upload a photo to enable analysis'}
+            </div>
+          )}
+        </section>
+      </div>
+
+      {/* Bottom Navigation */}
+      <div className="border-t border-gray-100 bg-white">
+        <div className="max-w-2xl mx-auto px-6 py-6">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={handlePrevious}
+              disabled={currentRoomIndex === 0}
+              className="text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:hover:text-gray-600"
+            >
+              ← Previous
+            </button>
+            
+            <button
+              onClick={handleNext}
+              className="bg-gray-900 text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+            >
+              {currentRoomIndex === rooms.length - 1 ? 'Complete' : 'Next →'}
+            </button>
           </div>
         </div>
       </div>
-
-      {/* Fixed Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-gray-200 px-4 py-4 safe-area-pb">
-        <div className="flex items-center justify-between max-w-lg mx-auto">
-          <button
-            onClick={handlePrevious}
-            disabled={currentRoomIndex === 0}
-            className="flex items-center px-6 py-3 rounded-2xl font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed bg-gray-100 text-gray-600 hover:bg-gray-200 hover:scale-105"
-          >
-            <svg className="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Previous
-          </button>
-
-          <div className="text-center">
-            <div className="text-sm text-gray-500 font-medium">
-              {currentRoomIndex + 1} of {rooms.length}
-            </div>
-          </div>
-
-          <button
-            onClick={handleNext}
-            className="flex items-center px-6 py-3 rounded-2xl font-medium transition-all duration-200 bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:scale-105"
-          >
-            {currentRoomIndex === rooms.length - 1 ? (
-              <>
-                Complete
-                <svg className="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </>
-            ) : (
-              <>
-                Next Room
-                <svg className="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </>
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Bottom padding to account for fixed navigation */}
-      <div className="h-24"></div>
     </div>
   )
 }
