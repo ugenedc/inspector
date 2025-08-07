@@ -179,10 +179,9 @@ export default function PhotoManager({
       {/* Content */}
       <div className="p-6">
         {activeTab === 'upload' ? (
-          <PhotoUpload
+                    <PhotoUpload 
             inspectionId={inspectionId}
             roomId={roomId}
-            roomName={roomName}
             onPhotoUploaded={handlePhotoUploaded}
             onError={handleError}
             maxFiles={maxFiles}

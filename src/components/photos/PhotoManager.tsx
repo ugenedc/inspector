@@ -24,7 +24,6 @@ interface PhotoMetadata {
 interface PhotoManagerProps {
   inspectionId: string
   roomId: string
-  roomName?: string
   maxFiles?: number
   allowCamera?: boolean
   allowFiles?: boolean
@@ -36,7 +35,6 @@ interface PhotoManagerProps {
 export default function PhotoManager({
   inspectionId,
   roomId,
-  roomName = 'Room',
   maxFiles = 10,
   allowCamera = true,
   allowFiles = true,
