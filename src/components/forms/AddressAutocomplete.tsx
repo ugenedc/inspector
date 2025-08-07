@@ -296,7 +296,9 @@ export default function AddressAutocomplete({
           {suggestions.map((suggestion, index) => (
             <button
               key={suggestion.place_id}
-              ref={el => suggestionRefs.current[index] = el}
+              ref={(el) => {
+                suggestionRefs.current[index] = el
+              }}
               type="button"
               onMouseDown={(e) => handleSuggestionClick(e, suggestion)}
               className={`w-full text-left px-4 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors ${
