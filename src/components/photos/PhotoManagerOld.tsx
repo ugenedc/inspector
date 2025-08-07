@@ -24,7 +24,6 @@ interface PhotoMetadata {
 interface PhotoManagerProps {
   inspectionId: string
   roomId: string
-  roomName?: string
   maxFiles?: number
   allowCamera?: boolean
   allowFiles?: boolean
@@ -36,7 +35,6 @@ interface PhotoManagerProps {
 export default function PhotoManager({
   inspectionId,
   roomId,
-  roomName = 'Room',
   maxFiles = 10,
   allowCamera = true,
   allowFiles = true,
@@ -115,7 +113,7 @@ export default function PhotoManager({
         <div className="px-6 py-4">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-medium text-gray-900">
-              Photos for {roomName}
+              Room Photos
             </h3>
             <span className="text-sm text-gray-500">
               {photos.length} of {maxFiles} photos

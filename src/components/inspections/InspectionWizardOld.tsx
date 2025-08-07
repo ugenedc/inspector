@@ -352,7 +352,7 @@ ${result.description}
           <PhotoManager
             inspectionId={inspectionId}
             roomId={currentRoom.id}
-            roomName={currentRoom.room_name}
+
             maxFiles={5}
             allowCamera={true}
             allowFiles={true}
