@@ -134,6 +134,7 @@ export default async function RoomSelectionPage({ params }: RoomSelectionPagePro
             </svg>
           </Link>
         </div>
+        </div>
       </div>
     </AppLayout>
   )
