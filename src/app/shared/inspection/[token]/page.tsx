@@ -8,37 +8,14 @@ interface SharedInspectionPageProps {
   }>
 }
 
-// Interfaces commented to avoid unused variable warnings
-// interface Room {
-//   id: string
-//   room_name: string
-//   room_type: string
-//   is_completed: boolean
-//   comments: string | null
-//   ai_analysis: string | null
-//   photos: Photo[]
-// }
-
-// interface Photo {
-//   id: string
-//   public_url: string
-//   description: string | null
-//   capture_method: string
-//   created_at: string
-// }
-
-// interface Inspection {
-//   id: string
-//   address: string
-//   inspection_type: 'entry' | 'exit' | 'routine'
-//   owner_name: string
-//   tenant_name: string | null
-//   inspection_date: string
-//   status: string
-//   notes: string | null
-//   created_at: string
-//   updated_at: string
-// }
+// Interface for photo type to avoid 'any' type
+interface Photo {
+  id: string
+  public_url: string
+  description: string | null
+  capture_method: string
+  created_at: string
+}
 
 export default async function SharedInspectionPage({ params }: SharedInspectionPageProps) {
   const { token } = await params
@@ -216,7 +193,7 @@ export default async function SharedInspectionPage({ params }: SharedInspectionP
                   <div className="mb-6">
                     <h4 className="text-sm font-medium text-gray-500 mb-3">Photos ({room.photos.length})</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {room.photos.map((photo) => (
+                      {room.photos.map((photo: Photo) => (
                         <div key={photo.id} className="group relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
                           <Image
                             src={photo.public_url}
