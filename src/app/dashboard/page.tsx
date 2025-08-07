@@ -9,7 +9,7 @@ interface Inspection {
   owner_name: string
   tenant_name?: string
   inspection_date: string
-  status: 'draft' | 'in_progress' | 'completed'
+  status: 'pending' | 'in_progress' | 'completed'
   created_at: string
   updated_at: string
   rooms_count?: number
@@ -33,7 +33,7 @@ export default async function DashboardPage() {
         is_completed
       )
     `)
-    .eq('created_by', user.id)
+    .eq('inspector_id', user.id)
     .order('created_at', { ascending: false })
 
   const inspectionsWithCounts: Inspection[] = (inspections || []).map(inspection => {
@@ -42,7 +42,7 @@ export default async function DashboardPage() {
     const totalRooms = rooms.length
     
     // Determine status based on room completion
-    let status: 'draft' | 'in_progress' | 'completed' = 'draft'
+    let status: 'pending' | 'in_progress' | 'completed' = 'pending'
     if (totalRooms > 0) {
       if (completedRooms === totalRooms) {
         status = 'completed'
@@ -72,7 +72,7 @@ export default async function DashboardPage() {
   const totalInspections = inspectionsWithCounts.length
   const inProgressCount = inspectionsWithCounts.filter(i => i.status === 'in_progress').length
   const completedCount = inspectionsWithCounts.filter(i => i.status === 'completed').length
-  const draftCount = inspectionsWithCounts.filter(i => i.status === 'draft').length
+  const pendingCount = inspectionsWithCounts.filter(i => i.status === 'pending').length
   
   // This week's inspections
   const thisWeek = new Date()
@@ -162,12 +162,12 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          {/* Drafts */}
+          {/* Pending */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Drafts</p>
-                <p className="text-3xl font-semibold text-gray-900">{draftCount}</p>
+                <p className="text-sm font-medium text-gray-600">Pending</p>
+                <p className="text-3xl font-semibold text-gray-900">{pendingCount}</p>
               </div>
               <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
                 <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

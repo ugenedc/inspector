@@ -1,6 +1,7 @@
 import AppLayout from '@/components/layout/AppLayout'
 import { createServerSupabase } from '@/lib/supabase'
 import Link from 'next/link'
+import InspectionActions from '@/components/inspections/InspectionActions'
 
 interface Inspection {
   id: string
@@ -9,7 +10,7 @@ interface Inspection {
   owner_name: string
   tenant_name?: string
   inspection_date: string
-  status: 'draft' | 'in_progress' | 'completed'
+  status: 'pending' | 'in_progress' | 'completed'
   created_at: string
   updated_at: string
   rooms_count?: number
@@ -33,7 +34,7 @@ export default async function InspectionsPage() {
         is_completed
       )
     `)
-    .eq('created_by', user.id)
+    .eq('inspector_id', user.id)
     .order('created_at', { ascending: false })
 
   const inspectionsWithCounts: Inspection[] = (inspections || []).map(inspection => {
@@ -42,7 +43,7 @@ export default async function InspectionsPage() {
     const totalRooms = rooms.length
     
     // Determine status based on room completion
-    let status: 'draft' | 'in_progress' | 'completed' = 'draft'
+    let status: 'pending' | 'in_progress' | 'completed' = 'pending'
     if (totalRooms > 0) {
       if (completedRooms === totalRooms) {
         status = 'completed'
@@ -73,8 +74,10 @@ export default async function InspectionsPage() {
       case 'completed':
         return 'bg-green-100 text-green-800'
       case 'in_progress':
-        return 'bg-orange-100 text-orange-800'
-      case 'draft':
+        return 'bg-blue-100 text-blue-800'
+      case 'cancelled':
+        return 'bg-red-100 text-red-800'
+      case 'pending':
         return 'bg-gray-100 text-gray-800'
       default:
         return 'bg-gray-100 text-gray-800'
@@ -110,27 +113,7 @@ export default async function InspectionsPage() {
     }
   }
 
-  const getNextAction = (inspection: Inspection) => {
-    if (inspection.status === 'draft' || !inspection.rooms_count) {
-      return {
-        text: 'Select Rooms',
-        href: `/inspections/${inspection.id}/rooms`,
-        color: 'bg-blue-600 hover:bg-blue-700'
-      }
-    }
-    if (inspection.status === 'in_progress') {
-      return {
-        text: 'Continue',
-        href: `/inspections/${inspection.id}/wizard`,
-        color: 'bg-orange-600 hover:bg-orange-700'
-      }
-    }
-    return {
-      text: 'View Report',
-      href: `/inspections/${inspection.id}/report`,
-      color: 'bg-green-600 hover:bg-green-700'
-    }
-  }
+
 
   return (
     <AppLayout>
@@ -195,7 +178,6 @@ export default async function InspectionsPage() {
             {/* Table Body */}
             <div className="divide-y divide-gray-200">
               {inspectionsWithCounts.map((inspection) => {
-                const nextAction = getNextAction(inspection)
                 return (
                   <div key={inspection.id} className="lg:grid lg:grid-cols-12 gap-4 p-6 hover:bg-gray-50 transition-colors">
                     {/* Mobile Layout */}
@@ -258,19 +240,8 @@ export default async function InspectionsPage() {
                       )}
 
                       {/* Actions */}
-                      <div className="flex space-x-3">
-                        <Link
-                          href={nextAction.href}
-                          className={`flex-1 inline-flex items-center justify-center px-4 py-2 text-white rounded-lg text-sm font-medium transition-colors ${nextAction.color}`}
-                        >
-                          {nextAction.text}
-                        </Link>
-                        <Link
-                          href={`/inspections/${inspection.id}`}
-                          className="px-4 py-2 border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
-                        >
-                          Details
-                        </Link>
+                      <div className="flex justify-center">
+                        <InspectionActions inspection={inspection} />
                       </div>
                     </div>
 
@@ -337,14 +308,7 @@ export default async function InspectionsPage() {
 
                       {/* Actions */}
                       <div className="col-span-1 flex justify-end">
-                        <div className="flex space-x-2">
-                          <Link
-                            href={nextAction.href}
-                            className={`inline-flex items-center px-3 py-1.5 text-white rounded-md text-sm font-medium transition-colors ${nextAction.color}`}
-                          >
-                            {nextAction.text}
-                          </Link>
-                        </div>
+                        <InspectionActions inspection={inspection} />
                       </div>
                     </div>
                   </div>

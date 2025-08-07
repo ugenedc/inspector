@@ -1,32 +1,71 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Print styles for inspection reports */
+@media print {
+  @page {
+    margin: 1in;
+    size: A4;
+  }
+  
+  body {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+  
+  nav, .no-print {
+    display: none !important;
+  }
+  
+  .print-container {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  h1 { font-size: 24px !important; }
+  h2 { font-size: 20px !important; }
+  h3 { font-size: 18px !important; }
+  
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  .avoid-break {
+    page-break-inside: avoid;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom map styles for beautiful minimal design */
+.custom-property-marker {
+  background: transparent !important;
+  border: none !important;
 }
 
-@layer utilities {
-  .safe-area-pb {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
+.custom-popup .leaflet-popup-content-wrapper {
+  background: white !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1), 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.custom-popup .leaflet-popup-content {
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+.custom-popup .leaflet-popup-tip {
+  background: white !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  border: none !important;
+}
+
+/* Remove default leaflet popup styles */
+.leaflet-popup-close-button {
+  display: none !important;
 }

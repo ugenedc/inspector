@@ -132,7 +132,7 @@ BEGIN
     IF EXISTS (SELECT 1 FROM public.inspections WHERE property_id IS NULL LIMIT 1) THEN
         
         FOR inspection_record IN 
-            SELECT DISTINCT address, created_by 
+            SELECT DISTINCT address, inspector_id 
             FROM public.inspections 
             WHERE property_id IS NULL AND address IS NOT NULL
         LOOP
@@ -147,14 +147,14 @@ BEGIN
                 NULL, -- state
                 NULL, -- country
                 NULL, -- postal_code
-                inspection_record.created_by
+                inspection_record.inspector_id
             );
             
             -- Update all inspections with this address/user to use the new property
             UPDATE public.inspections 
             SET property_id = new_property_id
             WHERE address = inspection_record.address 
-            AND created_by = inspection_record.created_by
+            AND inspector_id = inspection_record.inspector_id
             AND property_id IS NULL;
         END LOOP;
         

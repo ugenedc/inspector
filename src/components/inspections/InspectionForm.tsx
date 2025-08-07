@@ -34,6 +34,10 @@ export default function InspectionForm() {
   const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null)
   const [selectedLocation, setSelectedLocation] = useState<SelectedLocation | null>(null)
   
+  const handleLocationSelect = (location: SelectedLocation | null) => {
+    setSelectedLocation(location)
+  }
+  
   const router = useRouter()
   const supabase = createClientSupabase()
 
@@ -69,16 +73,20 @@ export default function InspectionForm() {
               p_formatted_address: selectedLocation.address,
               p_latitude: selectedLocation.lat,
               p_longitude: selectedLocation.lon,
-              p_place_id: selectedLocation.place_id
+              p_place_id: selectedLocation.place_id,
+              p_user_id: user.id
             })
 
           if (propertyError) {
             console.error('Property creation error:', propertyError)
+            // Continue without property linkage if creation fails
           } else {
             propertyId = propertyData
+            console.log('Property created/found:', propertyId)
           }
         } catch (propertyErr) {
           console.error('Property creation failed:', propertyErr)
+          // Continue without property linkage if creation fails
         }
       }
 
@@ -91,7 +99,7 @@ export default function InspectionForm() {
         tenant_name: formData.tenant_name?.trim() || null,
         inspection_date: formData.inspection_date,
         inspector_id: user.id,
-        status: 'pending',
+        status: 'pending', // Fixed: use 'pending' instead of 'draft' to match DB constraint
         created_at: new Date().toISOString(),
       }
 
@@ -129,9 +137,27 @@ export default function InspectionForm() {
 
     } catch (error) {
       console.error('Error creating inspection:', error)
+      
+      // Handle different types of errors
+      let errorMessage = 'Failed to create inspection. Please try again.'
+      
+      if (error && typeof error === 'object') {
+        if ('message' in error && error.message) {
+          errorMessage = error.message
+        } else if ('error' in error && error.error) {
+          errorMessage = error.error
+        } else if ('details' in error && error.details) {
+          errorMessage = error.details
+        } else {
+          errorMessage = `Database error: ${JSON.stringify(error)}`
+        }
+      } else if (typeof error === 'string') {
+        errorMessage = error
+      }
+      
       setMessage({
         type: 'error',
-        text: error instanceof Error ? error.message : 'Failed to create inspection. Please try again.'
+        text: errorMessage
       })
       setLoading(false)
       setRedirecting(false)
@@ -181,7 +207,7 @@ export default function InspectionForm() {
             <AddressAutocomplete
               value={formData.address}
               onChange={(value) => setFormData(prev => ({ ...prev, address: value }))}
-              onLocationSelect={setSelectedLocation}
+              onLocationSelect={handleLocationSelect}
               placeholder="Start typing an address (e.g., '123 Main St, New York')"
               name="address"
               required

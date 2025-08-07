@@ -178,9 +178,35 @@ export default function InspectionWizard({
     }
   }
 
-  const handleInspectionComplete = () => {
-    // Always redirect to the beautiful report page
-    router.push(`/inspections/${inspectionId}/report`)
+  const handleInspectionComplete = async () => {
+    try {
+      // Update inspection status to completed
+      const { error } = await supabase
+        .from('inspections')
+        .update({ 
+          status: 'completed',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', inspectionId)
+
+      if (error) {
+        console.error('Error updating inspection status:', error)
+        setMessage({
+          type: 'error',
+          text: 'Failed to complete inspection. Please try again.'
+        })
+        return
+      }
+
+      // Redirect to the beautiful report page
+      router.push(`/inspections/${inspectionId}/report`)
+    } catch (error) {
+      console.error('Error completing inspection:', error)
+      setMessage({
+        type: 'error',
+        text: 'Failed to complete inspection. Please try again.'
+      })
+    }
   }
 
   const goToRoom = (index: number) => {

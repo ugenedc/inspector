@@ -107,7 +107,10 @@ export default function AddressAutocomplete({
   }
 
   // Handle suggestion selection
-  const handleSuggestionClick = (suggestion: AddressSuggestion) => {
+  const handleSuggestionClick = (e: React.MouseEvent, suggestion: AddressSuggestion) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
     const selectedLocation: SelectedLocation = {
       address: suggestion.display_name,
       lat: parseFloat(suggestion.lat),
@@ -211,11 +214,17 @@ export default function AddressAutocomplete({
           value={value}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          onFocus={() => {
-            if (suggestions.length > 0) {
-              setShowSuggestions(true)
-            }
-          }}
+                          onFocus={() => {
+                  if (suggestions.length > 0) {
+                    setShowSuggestions(true)
+                  }
+                }}
+                onBlur={(e) => {
+                  // Don't hide suggestions if clicking on a suggestion
+                  setTimeout(() => {
+                    setShowSuggestions(false)
+                  }, 200)
+                }}
           className={`w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent text-gray-900 placeholder-gray-400 transition-all duration-200 ${
             isAddressSelected 
               ? 'bg-green-50 border-green-200 text-green-900' 
@@ -273,7 +282,7 @@ export default function AddressAutocomplete({
               key={suggestion.place_id}
               ref={el => suggestionRefs.current[index] = el}
               type="button"
-              onClick={() => handleSuggestionClick(suggestion)}
+              onMouseDown={(e) => handleSuggestionClick(e, suggestion)}
               className={`w-full text-left px-4 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors ${
                 index === highlightedIndex ? 'bg-gray-50' : ''
               }`}

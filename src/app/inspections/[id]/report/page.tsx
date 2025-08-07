@@ -3,6 +3,8 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import AppLayout from '@/components/layout/AppLayout'
+import PrintButton from '@/components/reports/PrintButton'
+import ShareButton from '@/components/reports/ShareButton'
 
 interface InspectionReportPageProps {
   params: Promise<{
@@ -56,7 +58,7 @@ export default async function InspectionReportPage({ params }: InspectionReportP
     .from('inspections')
     .select('*')
     .eq('id', id)
-    .eq('created_by', user.id)
+    .eq('inspector_id', user.id)
     .single()
 
   if (inspectionError || !inspection) {
@@ -119,44 +121,7 @@ export default async function InspectionReportPage({ params }: InspectionReportP
   }
 
   return (
-    <>
-      <style jsx global>{`
-        @media print {
-          @page {
-            margin: 1in;
-            size: A4;
-          }
-          
-          body {
-            -webkit-print-color-adjust: exact;
-            color-adjust: exact;
-          }
-          
-          nav, .no-print {
-            display: none !important;
-          }
-          
-          .print-container {
-            max-width: none !important;
-            margin: 0 !important;
-            padding: 0 !important;
-          }
-          
-          h1 { font-size: 24px !important; }
-          h2 { font-size: 20px !important; }
-          h3 { font-size: 18px !important; }
-          
-          img {
-            max-width: 100% !important;
-            height: auto !important;
-          }
-          
-          .avoid-break {
-            page-break-inside: avoid;
-          }
-        }
-      `}</style>
-      <AppLayout>
+    <AppLayout>
         <div className="min-h-screen bg-gray-50 print-container">
         {/* Header */}
         <div className="bg-white border-b border-gray-200">
@@ -171,15 +136,10 @@ export default async function InspectionReportPage({ params }: InspectionReportP
                 </svg>
                 Back to Inspection
               </Link>
-              <button
-                onClick={() => window.print()}
-                className="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
-              >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                </svg>
-                Export PDF
-              </button>
+              <div className="flex space-x-3">
+                <ShareButton inspectionId={id} />
+                <PrintButton />
+              </div>
             </div>
             
             <div className="text-center">
@@ -335,6 +295,5 @@ export default async function InspectionReportPage({ params }: InspectionReportP
         </div>
       </div>
       </AppLayout>
-    </>
   )
 }

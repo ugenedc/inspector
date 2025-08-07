@@ -368,7 +368,37 @@ export default function RoomSelection({ inspectionId, onRoomsChange, readonly = 
             Back to Inspection
           </button>
           <button
-            onClick={() => router.push(`/inspections/${inspectionId}/wizard`)}
+            onClick={async () => {
+              try {
+                setMessage(null) // Clear any existing messages
+                
+                // Update inspection status to in_progress
+                const { error } = await supabase
+                  .from('inspections')
+                  .update({ 
+                    status: 'in_progress',
+                    updated_at: new Date().toISOString()
+                  })
+                  .eq('id', inspectionId)
+
+                if (error) {
+                  console.error('Error updating inspection status:', error)
+                  setMessage({
+                    type: 'error',
+                    text: `Failed to start inspection: ${error.message}. Please try again.`
+                  })
+                } else {
+                  router.push(`/inspections/${inspectionId}/wizard`)
+                }
+              } catch (error) {
+                console.error('Error starting inspection:', error)
+                const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+                setMessage({
+                  type: 'error',
+                  text: `Failed to start inspection: ${errorMessage}. Please check your connection and try again.`
+                })
+              }
+            }}
             disabled={selectedRooms.length === 0}
             className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed order-1 sm:order-2"
           >
