@@ -234,7 +234,7 @@ export default function InspectionWizard({
     <div className="min-h-screen bg-white">
       {/* Clean Focused Header */}
       <div className="border-b border-gray-100">
-        <div className="max-w-4xl mx-auto px-6 py-8">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-6 md:py-8">
           {/* Step Indicator */}
           <div className="flex items-center space-x-2 text-sm text-gray-500 mb-6">
             <span>Step 3 of 3</span>
@@ -245,8 +245,8 @@ export default function InspectionWizard({
           {/* Focused Room Header */}
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-semibold text-gray-900">{currentRoom.room_name}</h1>
-              <p className="text-gray-600 mt-2 capitalize">{inspectionType} inspection</p>
+              <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">{currentRoom.room_name}</h1>
+              <p className="text-gray-600 mt-1 md:mt-2 capitalize text-sm md:text-base">{inspectionType} inspection</p>
             </div>
             
             {/* Compact Progress with Navigation Trigger */}
@@ -344,7 +344,7 @@ export default function InspectionWizard({
       )}
 
       {/* Main Content */}
-      <div className="max-w-2xl mx-auto px-6 py-8 space-y-12">
+      <div className="max-w-2xl mx-auto px-4 md:px-6 py-6 md:py-8 space-y-8 md:space-y-12">
         {/* Photos */}
         <section>
           <h2 className="text-lg font-medium text-gray-900 mb-6">Photos</h2>
@@ -440,18 +440,18 @@ export default function InspectionWizard({
 
       {/* Enhanced Bottom Navigation */}
       <div className="border-t border-gray-100 bg-white">
-        <div className="max-w-4xl mx-auto px-6 py-6">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-4 md:py-6">
           <div className="flex items-center justify-between">
             {/* Previous Button */}
             <button
               onClick={handlePrevious}
               disabled={currentRoomIndex === 0}
-              className="group flex items-center space-x-2 px-4 py-3 rounded-lg border border-gray-200 hover:border-gray-300 disabled:opacity-50 disabled:hover:border-gray-200 transition-colors"
+              className="group flex items-center space-x-2 px-3 md:px-4 py-2 md:py-3 rounded-lg border border-gray-200 hover:border-gray-300 disabled:opacity-50 disabled:hover:border-gray-200 transition-colors"
             >
               <svg className="w-4 h-4 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              <span className="text-gray-600 group-hover:text-gray-900">
+              <span className="text-gray-600 group-hover:text-gray-900 text-sm md:text-base">
                 {currentRoomIndex > 0 ? rooms[currentRoomIndex - 1]?.room_name : 'Previous'}
               </span>
             </button>
@@ -469,9 +469,9 @@ export default function InspectionWizard({
             {/* Next/Complete Button */}
             <button
               onClick={handleNext}
-              className="group flex items-center space-x-2 px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+              className="group flex items-center space-x-2 px-4 md:px-6 py-2 md:py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
             >
-              <span>
+              <span className="text-sm md:text-base">
                 {currentRoomIndex === rooms.length - 1 ? 'Complete Inspection' : 
                  rooms[currentRoomIndex + 1] ? rooms[currentRoomIndex + 1].room_name : 'Next Room'}
               </span>
