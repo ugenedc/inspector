@@ -242,7 +242,7 @@ export default async function InspectionReportPage({ params }: InspectionReportP
                         <div className="mb-6">
                           <h4 className="text-sm font-medium text-gray-700 mb-4">Photos ({room.photos.length})</h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {room.photos.map((photo) => (
+                            {room.photos.map((photo: any) => (
                               <div key={photo.id} className="space-y-3">
                                 <div className="relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
                                   <Image
