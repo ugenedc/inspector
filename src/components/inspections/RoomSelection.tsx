@@ -221,7 +221,7 @@ export default function RoomSelection({ inspectionId, onRoomsChange, readonly = 
             Select Rooms to Inspect
           </h1>
           <p className="text-gray-500">
-            Choose which rooms you'd like to include in this inspection.
+            Choose which rooms you&apos;d like to include in this inspection.
           </p>
         </div>
 
@@ -355,7 +355,6 @@ export default function RoomSelection({ inspectionId, onRoomsChange, readonly = 
           </div>
         )}
       </div>
-    </div>
     </div>
   )
 }
