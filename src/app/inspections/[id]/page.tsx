@@ -147,6 +147,7 @@ export default async function InspectionPage({ params }: InspectionPageProps) {
           </div>
         </div>
       </div>
+      </div>
     </AppLayout>
   )
 }

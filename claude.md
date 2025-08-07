@@ -4,6 +4,7 @@ This project should follow high-quality, professional coding practices. The assi
 
 ## ✅ General Principles
 
+- dont push to git without asking permission first
 - Use clean, **modular**, and **reusable** code.
 - Avoid duplication. Extract repeated logic into shared functions or components.
 - Prefer simplicity over cleverness. Code should be easy to read and understand by others.

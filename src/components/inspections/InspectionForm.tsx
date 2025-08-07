@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { createClientSupabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import AddressAutocomplete from '@/components/forms/AddressAutocomplete'
 
 interface InspectionFormData {
   address: string
@@ -143,15 +144,12 @@ export default function InspectionForm() {
             <label htmlFor="address" className="block text-sm font-medium text-gray-900 mb-3">
               Property Address *
             </label>
-            <textarea
-              id="address"
+            <AddressAutocomplete
+              value={formData.address}
+              onChange={(value) => setFormData(prev => ({ ...prev, address: value }))}
+              placeholder="Start typing an address (e.g., '123 Main St, New York')"
               name="address"
               required
-              rows={3}
-              value={formData.address}
-              onChange={handleInputChange}
-              className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent resize-none text-gray-900 placeholder-gray-400"
-              placeholder="Enter the complete property address"
             />
           </div>
 
